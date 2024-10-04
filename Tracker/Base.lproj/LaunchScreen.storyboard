@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Image" translatesAutoresizingMaskIntoConstraints="NO" id="AhZ-cD-hEM" userLabel="Logo">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreenLogo" translatesAutoresizingMaskIntoConstraints="NO" id="AhZ-cD-hEM" userLabel="Logo">
                                 <rect key="frame" x="151" y="379" width="91" height="94"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="91" id="XeJ-BM-iBN"/>
@@ -26,7 +26,7 @@
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" name="LaunchScreenBlue"/>
+                        <color key="backgroundColor" name="YPBlue"/>
                         <constraints>
                             <constraint firstItem="AhZ-cD-hEM" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="5SJ-t3-HMe"/>
                             <constraint firstItem="AhZ-cD-hEM" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="gnc-Sx-xUJ"/>
@@ -39,8 +39,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Image" width="91" height="94"/>
-        <namedColor name="LaunchScreenBlue">
+        <image name="LaunchScreenLogo" width="91" height="94"/>
+        <namedColor name="YPBlue">
             <color red="0.21568627450980393" green="0.44705882352941179" blue="0.90588235294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
