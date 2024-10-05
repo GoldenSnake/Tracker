@@ -21,7 +21,7 @@ class TabBarController: UITabBarController {
                                              image: .statisticsIconNoActive,
                                              selectedImage: .statisticsIconActive)
         
-        self.viewControllers = [trackersList, statistics]
+        viewControllers = [navigationController, statistics]
         
         tabBar.layer.borderWidth = 0.5
         tabBar.layer.borderColor = UIColor.ypGray.cgColor
