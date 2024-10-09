@@ -6,8 +6,20 @@ class TrackersListViewController: UIViewController {
     
     // MARK: - Private Properties
     private let addTrackerButton = UIBarButtonItem()
-    private let datePickerButton = UIBarButtonItem()
     private let searchController = UISearchController()
+    
+    private let datePickerButton: UIBarButtonItem = {
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .date
+        datePicker.locale = Locale(identifier: "ru_RU")
+        datePicker.preferredDatePickerStyle = .compact
+        let button = UIBarButtonItem(customView: datePicker)
+        
+        NSLayoutConstraint.activate([
+            datePicker.widthAnchor.constraint(equalToConstant: 100)
+        ])
+        return button
+    }()
     
     private let emptyStateView: UIView = {
         let view = UIView()
@@ -76,12 +88,6 @@ class TrackersListViewController: UIViewController {
     }
     
     private func setupNavBarItemRight() {
-        let datePicker = UIDatePicker()
-        datePicker.datePickerMode = .date
-        datePicker.locale = Locale(identifier: "ru_RU")
-        datePicker.preferredDatePickerStyle = .compact
-        datePickerButton.customView = datePicker
-        
         navigationItem.rightBarButtonItem = datePickerButton
     }
     
@@ -92,14 +98,13 @@ class TrackersListViewController: UIViewController {
     }
     
     private func setupConstraints() {
-
         NSLayoutConstraint.activate([
             emptyStateView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             emptyStateView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
         ])
     }
     
-    
+    // MARK: - @objc
     
     @objc private func addTrackerButtonDidTap() {
         print("NavBarItem tapped!")
