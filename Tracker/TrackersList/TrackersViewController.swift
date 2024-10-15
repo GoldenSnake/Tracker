@@ -2,9 +2,13 @@
 
 import UIKit
 
-class TrackersListViewController: UIViewController {
+class TrackersViewController: UIViewController {
     
     // MARK: - Private Properties
+    
+    private var categories: [TrackerCategory] = []
+    private var completedTrackers: [TrackerRecord] = []
+    
     private let addTrackerButton = UIBarButtonItem()
     private let searchController = UISearchController()
     
@@ -24,32 +28,6 @@ class TrackersListViewController: UIViewController {
     private let emptyStateView: UIView = {
         let view = EmptyStateView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        
-//        let image = UIImageView(image: .star)
-//        image.contentMode = .scaleAspectFit
-//        image.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(image)
-        
-//        let label = UILabel()
-//        label.text = "Что будем отслеживать?"
-//        label.textAlignment = .center
-//        label.textColor = .ypBlack
-//        label.font = .systemFont(ofSize: 12)
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        view.addSubview(label)
-//        
-//        
-//        NSLayoutConstraint.activate([
-//            image.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            image.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-//            image.widthAnchor.constraint(equalToConstant: 80),
-//            image.heightAnchor.constraint(equalToConstant: 80),
-//            
-//            label.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 8),
-//            label.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-//        ])
-        
         return view
     }()
     

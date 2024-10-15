@@ -10,7 +10,7 @@ class TabBarController: UITabBarController {
     
     func setupTabBar() {
         
-        let trackersList = TrackersListViewController()
+        let trackersList = TrackersViewController()
         trackersList.tabBarItem = UITabBarItem(title: "Трекеры",
                                                image: .trackerIconNoActive,
                                                selectedImage: .trackerIconActive)
