@@ -12,18 +12,7 @@ class TrackersViewController: UIViewController {
     private let addTrackerButton = UIBarButtonItem()
     private let searchController = UISearchController()
     
-    private let datePickerButton: UIBarButtonItem = {
-        let datePicker = UIDatePicker()
-        datePicker.datePickerMode = .date
-        datePicker.locale = Locale(identifier: "ru_RU")
-        datePicker.preferredDatePickerStyle = .compact
-        let button = UIBarButtonItem(customView: datePicker)
-        
-        NSLayoutConstraint.activate([
-            datePicker.widthAnchor.constraint(equalToConstant: 100)
-        ])
-        return button
-    }()
+   private let datePicker = UIDatePicker()
     
     private let emptyStateView: UIView = {
         let view = EmptyStateView()
@@ -66,7 +55,16 @@ class TrackersViewController: UIViewController {
     }
     
     private func setupNavBarItemRight() {
-        navigationItem.rightBarButtonItem = datePickerButton
+        datePicker.datePickerMode = .date
+        datePicker.locale = Locale(identifier: "ru_RU")
+        datePicker.preferredDatePickerStyle = .compact
+        datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        
+        NSLayoutConstraint.activate([
+            datePicker.widthAnchor.constraint(equalToConstant: 100)
+        ])
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
     }
     
     private func setupSearchController() {
@@ -86,5 +84,13 @@ class TrackersViewController: UIViewController {
     
     @objc private func addTrackerButtonDidTap() {
         print("NavBarItem tapped!")
+    }
+    
+    @objc func datePickerValueChanged(_ sender: UIDatePicker) {
+        let selectedDate = sender.date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy" // Формат даты
+        let formattedDate = dateFormatter.string(from: selectedDate)
+        print("Выбранная дата: \(formattedDate)")
     }
 }
