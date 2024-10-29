@@ -5,8 +5,8 @@ class AddTrackerViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    private let regularTrackerButton = UIButton(type: .system)
-    private let irregularTrackerButton = UIButton(type: .system)
+    private let regularTrackerButton = ActionButton(type: .system)
+    private let irregularTrackerButton = ActionButton(type: .system)
     private let stackView = UIStackView()
     
     // MARK: - View Lifecycle
@@ -33,28 +33,16 @@ class AddTrackerViewController: UIViewController {
     }
     
     private func setupRegularTrackerButton(){
-        
         regularTrackerButton.setTitle("Привычка", for: .normal)
         regularTrackerButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        regularTrackerButton.setTitleColor(.ypWhite, for: .normal)
-        regularTrackerButton.backgroundColor = .ypBlack
-        regularTrackerButton.layer.masksToBounds = true
-        regularTrackerButton.layer.cornerRadius = 16
-        
         regularTrackerButton.addTarget(self, action: #selector(regularTrackerButtonDidTap), for: .touchUpInside)
         
         regularTrackerButton.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func setupirregularTrackerButton(){
-        
         irregularTrackerButton.setTitle("Нерегулярное событие", for: .normal)
         irregularTrackerButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        irregularTrackerButton.setTitleColor(.ypWhite, for: .normal)
-        irregularTrackerButton.backgroundColor = .ypBlack
-        irregularTrackerButton.layer.masksToBounds = true
-        irregularTrackerButton.layer.cornerRadius = 16
-        
         irregularTrackerButton.addTarget(self, action: #selector(irregularTrackerButtonDidTap), for: .touchUpInside)
         
         irregularTrackerButton.translatesAutoresizingMaskIntoConstraints = false
