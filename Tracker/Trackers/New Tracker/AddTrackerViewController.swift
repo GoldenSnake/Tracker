@@ -3,11 +3,14 @@ import UIKit
 
 class AddTrackerViewController: UIViewController {
     
+    // MARK: - Private Properties
+    
     private let titleLabel = UILabel()
     private let regularTrackerButton = UIButton(type: .system)
     private let irregularTrackerButton = UIButton(type: .system)
     private let stackView = UIStackView()
     
+    // MARK: - View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,6 +23,8 @@ class AddTrackerViewController: UIViewController {
         setupirregularTrackerButton()
         setupConstraints()
     }
+    
+    // MARK: - Private Methods
     
     private func setupTitleLabel(){
         view.addSubview(titleLabel)
@@ -36,6 +41,7 @@ class AddTrackerViewController: UIViewController {
         regularTrackerButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         regularTrackerButton.setTitleColor(.ypWhite, for: .normal)
         regularTrackerButton.backgroundColor = .ypBlack
+        regularTrackerButton.layer.masksToBounds = true
         regularTrackerButton.layer.cornerRadius = 16
         
         regularTrackerButton.addTarget(self, action: #selector(regularTrackerButtonDidTap), for: .touchUpInside)
@@ -49,6 +55,7 @@ class AddTrackerViewController: UIViewController {
         irregularTrackerButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         irregularTrackerButton.setTitleColor(.ypWhite, for: .normal)
         irregularTrackerButton.backgroundColor = .ypBlack
+        irregularTrackerButton.layer.masksToBounds = true
         irregularTrackerButton.layer.cornerRadius = 16
         
         irregularTrackerButton.addTarget(self, action: #selector(irregularTrackerButtonDidTap), for: .touchUpInside)
@@ -70,7 +77,7 @@ class AddTrackerViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 114),
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -87,16 +94,16 @@ class AddTrackerViewController: UIViewController {
     
     @objc private func regularTrackerButtonDidTap() {
         print("regularTrackerButtonDidTap")
-//        let vc = AddTrackerViewController()
-//        vc.modalPresentationStyle = .formSheet
-//        present(vc, animated: true)
+        let vc = NewTrackerVC(trackerType: .regular)
+        vc.modalPresentationStyle = .formSheet
+        present(vc, animated: true)
     }
     
     @objc private func irregularTrackerButtonDidTap() {
         print("irregularTrackerButtonDidTap")
-//        let vc = AddTrackerViewController()
-//        vc.modalPresentationStyle = .formSheet
-//        present(vc, animated: true)
+        let vc = NewTrackerVC(trackerType: .irregular)
+        vc.modalPresentationStyle = .formSheet
+        present(vc, animated: true)
     }
     
     
