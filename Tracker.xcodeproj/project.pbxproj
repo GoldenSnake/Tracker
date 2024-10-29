@@ -14,7 +14,6 @@
 		013C224D2CD10C6A0047EF9B /* NewTrackerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C224C2CD10C6A0047EF9B /* NewTrackerVC.swift */; };
 		013C22502CD141C10047EF9B /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C224F2CD141C10047EF9B /* ScheduleViewController.swift */; };
 		013C22522CD15EB70047EF9B /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22512CD15EB70047EF9B /* ActionButton.swift */; };
-		013C22542CD1690D0047EF9B /* BaseTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22532CD1690D0047EF9B /* BaseTableView.swift */; };
 		013C22562CD175EB0047EF9B /* ScheduleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22552CD175EB0047EF9B /* ScheduleCell.swift */; };
 		013C22582CD189B10047EF9B /* ApplyCornerRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22572CD189B10047EF9B /* ApplyCornerRadius.swift */; };
 		013C225A2CD18CDC0047EF9B /* AddSeparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22592CD18CDC0047EF9B /* AddSeparator.swift */; };
@@ -40,7 +39,6 @@
 		013C224C2CD10C6A0047EF9B /* NewTrackerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTrackerVC.swift; sourceTree = "<group>"; };
 		013C224F2CD141C10047EF9B /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		013C22512CD15EB70047EF9B /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
-		013C22532CD1690D0047EF9B /* BaseTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableView.swift; sourceTree = "<group>"; };
 		013C22552CD175EB0047EF9B /* ScheduleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleCell.swift; sourceTree = "<group>"; };
 		013C22572CD189B10047EF9B /* ApplyCornerRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyCornerRadius.swift; sourceTree = "<group>"; };
 		013C22592CD18CDC0047EF9B /* AddSeparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSeparator.swift; sourceTree = "<group>"; };
@@ -128,7 +126,6 @@
 				013C22512CD15EB70047EF9B /* ActionButton.swift */,
 				013C22592CD18CDC0047EF9B /* AddSeparator.swift */,
 				013C22572CD189B10047EF9B /* ApplyCornerRadius.swift */,
-				013C22532CD1690D0047EF9B /* BaseTableView.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -248,7 +245,6 @@
 				014C73342CAF6716007DC80C /* StatisticsViewController.swift in Sources */,
 				013C22582CD189B10047EF9B /* ApplyCornerRadius.swift in Sources */,
 				013C224A2CD05FC90047EF9B /* AddTrackerViewController.swift in Sources */,
-				013C22542CD1690D0047EF9B /* BaseTableView.swift in Sources */,
 				013C22502CD141C10047EF9B /* ScheduleViewController.swift in Sources */,
 				013C224D2CD10C6A0047EF9B /* NewTrackerVC.swift in Sources */,
 				01CB9C742CAF522B00BD647A /* AppDelegate.swift in Sources */,
