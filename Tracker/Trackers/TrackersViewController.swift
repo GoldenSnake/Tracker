@@ -142,9 +142,10 @@ class TrackersViewController: UIViewController {
     
     @objc private func addTrackerButtonDidTap() {
         print("add tapped!")
-        let vc = AddTrackerViewController()
-        vc.modalPresentationStyle = .formSheet
-        present(vc, animated: true)
+        let viewController = AddTrackerViewController()
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.modalPresentationStyle = .formSheet
+        present(navigationController, animated: true)
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {

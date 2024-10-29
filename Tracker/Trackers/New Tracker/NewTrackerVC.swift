@@ -4,7 +4,6 @@ class NewTrackerVC: UIViewController {
     
     // MARK: - Private Properties
     
-    private let titleLabel = UILabel()
     private let cancelButton = UIButton(type: .system)
     private let createButton = UIButton(type: .system)
     private let buttonStackView = UIStackView()
@@ -40,7 +39,7 @@ class NewTrackerVC: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        setupTitleLabel()
+        
         setupCancelButton()
         setupCreateButton()
         setupButtonStackView()
@@ -54,16 +53,6 @@ class NewTrackerVC: UIViewController {
     
     // MARK: - Private Methods
     
-    private func setupTitleLabel() {
-        view.addSubview(titleLabel)
-        titleLabel.font = .systemFont(ofSize: 16, weight: .medium)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20)
-        ])
-    }
     
     private func setupCancelButton() {
         cancelButton.setTitle("Отменить", for: .normal)
@@ -131,18 +120,24 @@ class NewTrackerVC: UIViewController {
         
         NSLayoutConstraint.activate([
             scheduleButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            scheduleButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20)
+            scheduleButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20)
         ])
     }
     
     
     private func configureUI() {
+        
+        navigationItem.hidesBackButton = true
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .medium),
+            NSAttributedString.Key.foregroundColor: UIColor.ypBlack
+        ]
         switch trackerType {
         case .regular:
-            titleLabel.text = "Новая Привычка"
+            title = "Новая Привычка"
             scheduleButton.isHidden = false
         case .irregular:
-            titleLabel.text = "Нерегулярное событие"
+            title = "Нерегулярное событие"
             scheduleButton.isHidden = true
         }
     }
@@ -168,7 +163,7 @@ class NewTrackerVC: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 38),
             tableView.bottomAnchor.constraint(equalTo: buttonStackView.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
@@ -183,7 +178,7 @@ class NewTrackerVC: UIViewController {
     }
     
     @objc private func cancelButtonTapped() {
-        self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true)
     }
     
     @objc private func createButtonTapped() {
@@ -195,16 +190,17 @@ extension NewTrackerVC: UITableViewDataSource, UITableViewDelegate {
     
     // Укажите количество секций (по умолчанию 1)
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 4
     }
     
     // Укажите количество строк в секции
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return 1
     }
     // Настройка ячейки
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        
         cell.textLabel?.text = "Ячейка \(indexPath.row + 1)" // настройте текст для каждой ячейки
         return cell
     }
