@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		013C22442CC9D0E40047EF9B /* GeometricParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22432CC9D0E40047EF9B /* GeometricParams.swift */; };
 		013C22462CC9D5730047EF9B /* TrackersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22452CC9D5720047EF9B /* TrackersCell.swift */; };
+		013C22482CD056390047EF9B /* TrackerCategoryHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22472CD056390047EF9B /* TrackerCategoryHeader.swift */; };
 		014C73322CAF66F2007DC80C /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014C73312CAF66F2007DC80C /* TrackersViewController.swift */; };
 		014C73342CAF6716007DC80C /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014C73332CAF6716007DC80C /* StatisticsViewController.swift */; };
 		014C73362CAF6869007DC80C /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014C73352CAF6869007DC80C /* TabBarController.swift */; };
@@ -26,6 +27,7 @@
 /* Begin PBXFileReference section */
 		013C22432CC9D0E40047EF9B /* GeometricParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometricParams.swift; sourceTree = "<group>"; };
 		013C22452CC9D5720047EF9B /* TrackersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCell.swift; sourceTree = "<group>"; };
+		013C22472CD056390047EF9B /* TrackerCategoryHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryHeader.swift; sourceTree = "<group>"; };
 		014C73312CAF66F2007DC80C /* TrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
 		014C73332CAF6716007DC80C /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		014C73352CAF6869007DC80C /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 				015A82322CBF223E00A6B822 /* Models */,
 				014C73312CAF66F2007DC80C /* TrackersViewController.swift */,
 				013C22452CC9D5720047EF9B /* TrackersCell.swift */,
+				013C22472CD056390047EF9B /* TrackerCategoryHeader.swift */,
 				01A8403F2CBD16C100F45ACC /* EmptyStateView.swift */,
 			);
 			path = TrackersList;
@@ -210,6 +213,7 @@
 				014C73362CAF6869007DC80C /* TabBarController.swift in Sources */,
 				01A840402CBD16C100F45ACC /* EmptyStateView.swift in Sources */,
 				015A82392CBF229300A6B822 /* TrackerRecord.swift in Sources */,
+				013C22482CD056390047EF9B /* TrackerCategoryHeader.swift in Sources */,
 				014C73322CAF66F2007DC80C /* TrackersViewController.swift in Sources */,
 				01CB9C762CAF522B00BD647A /* SceneDelegate.swift in Sources */,
 				015A82342CBF226400A6B822 /* Tracker.swift in Sources */,

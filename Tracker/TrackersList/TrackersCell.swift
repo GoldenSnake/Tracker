@@ -75,7 +75,7 @@ class TrackersCell: UICollectionViewCell {
     
     // Настройка titleLabel
     private func setupTitleLabel() {
-        titleLabel.text = "Кошка заслонила камеру на созвоне"
+        titleLabel.text = "Текст"
         titleLabel.font = .systemFont(ofSize: 12, weight: .medium)
         titleLabel.textColor = .ypWhite
         titleLabel.textAlignment = .left
@@ -87,7 +87,7 @@ class TrackersCell: UICollectionViewCell {
     private func setupCounterLabel() {
         addSubview(counterLabel)
         
-        counterLabel.text = "5 дней"
+        counterLabel.text = "1 день"
         counterLabel.font = .systemFont(ofSize: 12, weight: .medium)
         counterLabel.textColor = .ypBlack
         counterLabel.textAlignment = .left
