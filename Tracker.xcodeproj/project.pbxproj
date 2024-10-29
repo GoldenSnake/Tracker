@@ -10,6 +10,7 @@
 		013C22442CC9D0E40047EF9B /* GeometricParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22432CC9D0E40047EF9B /* GeometricParams.swift */; };
 		013C22462CC9D5730047EF9B /* TrackersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22452CC9D5720047EF9B /* TrackersCell.swift */; };
 		013C22482CD056390047EF9B /* TrackerCategoryHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22472CD056390047EF9B /* TrackerCategoryHeader.swift */; };
+		013C224A2CD05FC90047EF9B /* AddTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22492CD05FC90047EF9B /* AddTrackerViewController.swift */; };
 		014C73322CAF66F2007DC80C /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014C73312CAF66F2007DC80C /* TrackersViewController.swift */; };
 		014C73342CAF6716007DC80C /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014C73332CAF6716007DC80C /* StatisticsViewController.swift */; };
 		014C73362CAF6869007DC80C /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014C73352CAF6869007DC80C /* TabBarController.swift */; };
@@ -28,6 +29,7 @@
 		013C22432CC9D0E40047EF9B /* GeometricParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometricParams.swift; sourceTree = "<group>"; };
 		013C22452CC9D5720047EF9B /* TrackersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCell.swift; sourceTree = "<group>"; };
 		013C22472CD056390047EF9B /* TrackerCategoryHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryHeader.swift; sourceTree = "<group>"; };
+		013C22492CD05FC90047EF9B /* AddTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTrackerViewController.swift; sourceTree = "<group>"; };
 		014C73312CAF66F2007DC80C /* TrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
 		014C73332CAF6716007DC80C /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		014C73352CAF6869007DC80C /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
@@ -55,6 +57,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		013C224B2CD0FF0A0047EF9B /* New Tracker */ = {
+			isa = PBXGroup;
+			children = (
+				013C22492CD05FC90047EF9B /* AddTrackerViewController.swift */,
+			);
+			path = "New Tracker";
+			sourceTree = "<group>";
+		};
 		014C732F2CAF6662007DC80C /* Statistics */ = {
 			isa = PBXGroup;
 			children = (
@@ -63,16 +73,17 @@
 			path = Statistics;
 			sourceTree = "<group>";
 		};
-		014C73302CAF668A007DC80C /* TrackersList */ = {
+		014C73302CAF668A007DC80C /* Trackers */ = {
 			isa = PBXGroup;
 			children = (
+				013C224B2CD0FF0A0047EF9B /* New Tracker */,
 				015A82322CBF223E00A6B822 /* Models */,
 				014C73312CAF66F2007DC80C /* TrackersViewController.swift */,
 				013C22452CC9D5720047EF9B /* TrackersCell.swift */,
 				013C22472CD056390047EF9B /* TrackerCategoryHeader.swift */,
 				01A8403F2CBD16C100F45ACC /* EmptyStateView.swift */,
 			);
-			path = TrackersList;
+			path = Trackers;
 			sourceTree = "<group>";
 		};
 		015A82322CBF223E00A6B822 /* Models */ = {
@@ -117,7 +128,7 @@
 				01CB9C752CAF522B00BD647A /* SceneDelegate.swift */,
 				015A823A2CBF239F00A6B822 /* Helpers */,
 				014C732F2CAF6662007DC80C /* Statistics */,
-				014C73302CAF668A007DC80C /* TrackersList */,
+				014C73302CAF668A007DC80C /* Trackers */,
 				01CB9C872CAF644F00BD647A /* TabBar */,
 				01CB9C7C2CAF522C00BD647A /* Assets.xcassets */,
 				01CB9C7E2CAF522C00BD647A /* LaunchScreen.storyboard */,
@@ -206,6 +217,7 @@
 			files = (
 				013C22462CC9D5730047EF9B /* TrackersCell.swift in Sources */,
 				014C73342CAF6716007DC80C /* StatisticsViewController.swift in Sources */,
+				013C224A2CD05FC90047EF9B /* AddTrackerViewController.swift in Sources */,
 				01CB9C742CAF522B00BD647A /* AppDelegate.swift in Sources */,
 				015A82372CBF227F00A6B822 /* TrackerCategory.swift in Sources */,
 				015A823C2CBF23EE00A6B822 /* week.swift in Sources */,

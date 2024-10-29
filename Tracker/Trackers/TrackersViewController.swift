@@ -138,10 +138,13 @@ class TrackersViewController: UIViewController {
         navigationItem.searchController = searchController
     }
     
-    // MARK: - @objc
+    // MARK: - Actions
     
     @objc private func addTrackerButtonDidTap() {
-        print("NavBarItem tapped!")
+        print("add tapped!")
+        let vc = AddTrackerViewController()
+        vc.modalPresentationStyle = .formSheet
+        present(vc, animated: true)
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {

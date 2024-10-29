@@ -145,6 +145,8 @@ class TrackersCell: UICollectionViewCell {
     @objc
     private func completeButtonDidTap() {
         print("Complete button tapped")
+        completeButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+        completeButton.alpha = 0.5
     }
     
 }
