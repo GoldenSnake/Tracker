@@ -1,6 +1,14 @@
 import UIKit
 
+
+protocol TrackerCellDelegate: AnyObject {
+    func trackerCellDidChangeCompletion(for cell: TrackersCell, to isCompleted: Bool)
+}
+
 class TrackersCell: UICollectionViewCell {
+    
+    // MARK: - Public Properties
+       weak var delegate: TrackerCellDelegate?
     
     
     // MARK: - private
@@ -12,6 +20,10 @@ class TrackersCell: UICollectionViewCell {
     
     private let cardView = UIView()
     private let circleView = UIView()
+    
+    private var isCompleted = false
+    private var numberOfCompletions = 0
+    private var color = UIColor()
     
     // MARK: - init
     
@@ -32,16 +44,43 @@ class TrackersCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func config(with tracker: Tracker) {
-        cardView.backgroundColor = tracker.color
-        completeButton.backgroundColor = tracker.color
-        titleLabel.text = tracker.name
-        emojiLabel.text = tracker.emoji
-        counterLabel.text = "1 день"
-    }
+    func config(with tracker: Tracker, numberOfCompletions: Int, isCompleted: Bool, completionIsEnabled: Bool) {
+            self.isCompleted = isCompleted
+            self.numberOfCompletions = numberOfCompletions
+            self.color = tracker.color
+            
+            cardView.backgroundColor = tracker.color
+            completeButton.isEnabled = completionIsEnabled
+            titleLabel.text = tracker.name
+            emojiLabel.text = tracker.emoji
+            
+            configureViewState()
+        }
     
     
     // MARK: - private
+    
+    private func configureViewState() {
+           if isCompleted {
+               completeButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+               completeButton.backgroundColor = color.withAlphaComponent(0.3)
+           } else {
+               completeButton.setImage(UIImage(systemName: "plus"), for: .normal)
+               completeButton.backgroundColor = color
+           }
+           
+           let remainder100 = numberOfCompletions % 100
+           let remainder10 = numberOfCompletions % 10
+           if remainder100 >= 11 && remainder100 <= 14 {
+               counterLabel.text = "\(numberOfCompletions) дней"
+           } else if remainder10 == 1 {
+               counterLabel.text = "\(numberOfCompletions) день"
+           } else if remainder10 >= 2 && remainder10 <= 4 {
+               counterLabel.text = "\(numberOfCompletions) дня"
+           } else {
+               counterLabel.text = "\(numberOfCompletions) дней"
+           }
+       }
     
     private func setupCircleVeiw() {
         
@@ -144,9 +183,18 @@ class TrackersCell: UICollectionViewCell {
     // MARK: - Actions
     @objc
     private func completeButtonDidTap() {
-        print("Complete button tapped")
-        completeButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
-        completeButton.alpha = 0.5
+        if isCompleted {
+            numberOfCompletions -= 1
+        } else {
+            numberOfCompletions += 1
+        }
+        isCompleted.toggle()
+        configureViewState()
+        delegate?.trackerCellDidChangeCompletion(for: self, to: isCompleted)
+        
+//        print("Complete button tapped")
+//        completeButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+//        completeButton.alpha = 0.5
     }
     
 }

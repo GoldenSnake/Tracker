@@ -162,7 +162,34 @@ final class NewTrackerVC: UIViewController {
     }
     
     @objc private func createButtonTapped() {
-        // Обработка нажатия
+        let colors: [UIColor] = [
+            .blueLilacSelection,
+            .blueSelection,
+            .cornflowerBlueSelection,
+            .deepPinkSelection,
+            .deepPurpleSelection,
+            .emeraldGreenSelection,
+            .greenSelection,
+            .lightBlueSelection,
+            .lightOrangeSelection,
+            .lightPinkSelection,
+            .lightPurpleSelection,
+            .lightGreenSelection,
+            .orangeSelection,
+            .orchidPinkSelection,
+            .pinkSelection,
+            .redSelection,
+            .slateBlueSelection,
+            .tomatoRedSelection
+        ]
+        guard let randomColor = colors.randomElement() else {return}
+        
+        let emoji = [
+            "🌺", "😻", "❤️", "💫", "🥇","🌞", "🌙", "⭐️","🍀", "🌿", "🌳","🍎", "🥑", "🍒","🏃‍♂️", "🚴‍♀️","🎨", "🎸", "🎮", "🎧", "📚", "✍️","💡", "💻","😇", "🤗", "🥰", "😴", "🤓", "😎","🌍", "✈️", "🚀", "🚲", "🏕️","🎉", "🎈", "🎂", "🎁", "🎄"
+        ].randomElement()!
+                let tracker = Tracker(id: UUID(), name: name, color: randomColor, emoji: emoji, days: days)
+                NotificationCenter.default.post(name: TrackersViewController.notificationName, object: tracker)
+                self.dismiss(animated: true)
     }
 }
 

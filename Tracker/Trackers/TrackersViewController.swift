@@ -3,7 +3,8 @@
 import UIKit
 
 class TrackersViewController: UIViewController {
-    
+
+    static let notificationName = NSNotification.Name("AddNewTracker")
     // MARK: - Private Properties
     
     private var categories: [TrackerCategory] = []
@@ -11,6 +12,7 @@ class TrackersViewController: UIViewController {
     private var currentDate: Date = Date()
     private var completedIds: Set<UUID> = []
     private var allTrackers: [Tracker] = []
+    private var completionsCounter: [UUID: Int] = [:]
     
     private let emptyStateView: UIView = {
         let view = EmptyStateView()
@@ -36,7 +38,7 @@ class TrackersViewController: UIViewController {
         
         view.backgroundColor = .ypWhite
         
-        makeMockData()
+//        makeMockData()
         view.addSubview(emptyStateView)
         //        updateView()
         
@@ -44,25 +46,15 @@ class TrackersViewController: UIViewController {
         setupConstraints()
         setupNavigationBar()
         collectionView.isHidden = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(addNewTracker), name: TrackersViewController.notificationName, object: nil)
     }
+    
+    deinit {
+            NotificationCenter.default.removeObserver(self, name: TrackersViewController.notificationName, object: nil)
+        }
     
     // MARK: - Private Methods
-    
-    private func makeMockData() {
-        let t1 = Tracker(id: UUID(), name: "Поливать растения", color: UIColor(red: 51/255.0, green: 207/255.0, blue: 105/255.0, alpha: 1), emoji: "🌺", days: [.monday, .friday])
-        let t2 = Tracker(id: UUID(), name: "Кошка заслонила камеру на созвоне", color: UIColor(red: 255/255.0, green: 136/255.0, blue: 30/255.0, alpha: 1), emoji: "😻", days: [.tuesday, .thursday, .saturday])
-        let t3 = Tracker(id: UUID(), name: "Бабушка прислала открытку в вотсапе", color: UIColor(red: 255/255.0, green: 103/255.0, blue: 77/255.0, alpha: 1), emoji: "❤️", days: [.wednesday])
-        //        let category = TrackerCategory(name: "Домашний уют", trackers: [t1, t2, t3])
-        //        categories.append(category)
-        
-        let t4 = Tracker(id: UUID(), name: "Свидания в апреле", color: UIColor(red: 173/255.0, green: 86/255.0, blue: 218/255.0, alpha: 1), emoji: "💫", days: [.monday, .friday])
-        let t5 = Tracker(id: UUID(), name: "Хорошее настроение", color: UIColor(red: 249/255.0, green: 212/255.0, blue: 212/255.0, alpha: 1), emoji: "🚴‍♂️", days: [.tuesday, .thursday, .saturday])
-        let t6 = Tracker(id: UUID(), name: "Тест 3", color: UIColor(red: 246/255.0, green: 196/255.0, blue: 139/255.0, alpha: 1), emoji: "🚴‍♂️", days: [.tuesday, .thursday, .saturday])
-        //        let category2 = TrackerCategory(name: "Радостные мелочи", trackers: [t4, t5, t6])
-        //        categories.append(category2)
-        allTrackers.append(contentsOf: [t1, t2, t3, t4, t5, t6])
-                update()
-    }
     
     private func update() {
             let completedIrregulars = Set(
@@ -177,6 +169,13 @@ class TrackersViewController: UIViewController {
     
     // MARK: - Actions
     
+    @objc
+      private func addNewTracker(_ notification: Notification) {
+          guard let tracker = notification.object as? Tracker else { return }
+          allTrackers.append(tracker)
+          update()
+      }
+    
     @objc private func addTrackerButtonDidTap() {
         print("add tapped!")
         let viewController = AddTrackerViewController()
@@ -231,7 +230,12 @@ extension TrackersViewController: UICollectionViewDataSource {
         //создаем ячейку
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? TrackersCell else {return UICollectionViewCell()}
         cell.prepareForReuse()
-        cell.config(with: categories[indexPath.section].trackers[indexPath.row])
+        let tracker = categories[indexPath.section].trackers[indexPath.row]
+                cell.config(with: tracker,
+                            numberOfCompletions: completionsCounter[tracker.id] ?? 0,
+                            isCompleted: completedIds.contains(tracker.id),
+                            completionIsEnabled: currentDate <= Date())
+                cell.delegate = self
         return cell
     }
 }
@@ -268,4 +272,24 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: collectionView.frame.width, height: 19)
     }
     
+}
+
+// MARK: - TrackerCellDelegate
+extension TrackersViewController: TrackerCellDelegate {
+    func trackerCellDidChangeCompletion(for cell: TrackersCell, to isCompleted: Bool) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        let tracker = categories[indexPath.section].trackers[indexPath.row]
+        
+        if isCompleted {
+            completedTrackers.append(TrackerRecord(trackerId: tracker.id, date: currentDate))
+            completedIds.insert(tracker.id)
+            completionsCounter[tracker.id] = (completionsCounter[tracker.id] ?? 0) + 1
+        } else {
+            completedTrackers.removeAll { $0.trackerId == tracker.id && $0.date == currentDate }
+            completedIds.remove(tracker.id)
+            if let currentCount = completionsCounter[tracker.id], currentCount > 0 {
+                completionsCounter[tracker.id] = currentCount - 1
+            }
+        }
+    }
 }
