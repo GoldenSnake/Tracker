@@ -39,6 +39,7 @@ class TrackersViewController: UIViewController {
         makeMockData()
         view.addSubview(emptyStateView)
         //        updateView()
+        
         setupCollectionVeiw()
         setupConstraints()
         setupNavigationBar()

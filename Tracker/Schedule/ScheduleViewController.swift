@@ -8,9 +8,29 @@ final class ScheduleViewController: UIViewController {
     
     private let doneButton = ActionButton(type: .system)
     
-    private var selectedDays: [Bool] = [false, false, false, false, false, false, false]
+    private var schedule: [(Weekday, Bool)] = []
+    private let cellReuseID = "ScheduleCell"
     
     private let scheduleTableView = UITableView()
+    
+    var onCompletion: ((Set<Weekday>) -> Void)?
+    
+    init(days: Set<Weekday>? = nil) {
+        let firstWeekday = Calendar.current.firstWeekday
+        schedule = (0..<7).compactMap { index in
+            let dayIndex = (index + firstWeekday - 1) % 7 + 1
+            if let day = Weekday(rawValue: dayIndex) {
+                return (day, days?.contains(day) ?? false)
+            }
+            return nil
+        }
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - View Lifecycle
     
@@ -61,7 +81,7 @@ final class ScheduleViewController: UIViewController {
         
         // Регистрация кастомной ячейки
         scheduleTableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        scheduleTableView.register(ScheduleCell.self, forCellReuseIdentifier: "ScheduleCell")
+        scheduleTableView.register(ScheduleCell.self, forCellReuseIdentifier: cellReuseID)
         
         scheduleTableView.separatorStyle = .none
         scheduleTableView.layer.cornerRadius = 16 // Закругляем углы
@@ -80,10 +100,8 @@ final class ScheduleViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func doneButtonTapped() {
-        // Обработка нажатия на кнопку
-//        if let previousVC = navigationController?.viewControllers[navigationController!.viewControllers.count - 2] as? NewTrackerVC {
-//                   previousVC.selectedDays = selectedDays
-//               }
+        let days = Set(schedule.filter{ $0.1 }.map{ $0.0 })
+        onCompletion?(days)
         
         navigationController?.popViewController(animated: true)
     }
@@ -97,16 +115,11 @@ extension ScheduleViewController: UITableViewDelegate, UITableViewDataSource {
     }
     // Настройка ячейки
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ScheduleCell", for: indexPath) as? ScheduleCell else {return UITableViewCell()}
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseID, for: indexPath) as? ScheduleCell else {return UITableViewCell()}
         
-        // данные для ячейки
-        let weekday = Weekday.allCases[indexPath.row]
-        let isOn = selectedDays[indexPath.row]
-        
-        cell.configure(with: weekday, isOn: isOn) { isOn in
-            // Обработка переключения, например, обновление состояния
-            self.selectedDays[indexPath.row] = isOn
-            print("\(weekday.name) is \(isOn ? "on" : "off")")
+        let item = schedule[indexPath.row]
+        cell.configure(with: item.0, isOn: item.1) { [weak self] isOn in
+            self?.schedule[indexPath.row].1 = isOn
         }
         
         tableView.applyCornerRadius(to: cell, at: indexPath)
