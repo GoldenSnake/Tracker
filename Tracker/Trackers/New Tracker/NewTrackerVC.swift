@@ -8,8 +8,6 @@ class NewTrackerVC: UIViewController {
     private let createButton = ActionButton(type: .system)
     private let buttonStackView = UIStackView()
     
-    private let scheduleButton = UIButton(type: .system)
-    
     // TableView
     private let tableView = UITableView()
     
@@ -43,8 +41,6 @@ class NewTrackerVC: UIViewController {
         setupCancelButton()
         setupCreateButton()
         setupButtonStackView()
-        
-        setupScheduleButton()
         
         configureUI()
         
@@ -104,20 +100,6 @@ class NewTrackerVC: UIViewController {
     }
     
     
-    private func setupScheduleButton() {
-        view.addSubview(scheduleButton)
-        scheduleButton.setTitle("Расписание", for: .normal)
-        scheduleButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        scheduleButton.translatesAutoresizingMaskIntoConstraints = false
-        scheduleButton.addTarget(self, action: #selector(scheduleButtonTapped), for: .touchUpInside)
-        
-        NSLayoutConstraint.activate([
-            scheduleButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            scheduleButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20)
-        ])
-    }
-    
-    
     private func configureUI() {
         
         navigationItem.hidesBackButton = true
@@ -129,10 +111,8 @@ class NewTrackerVC: UIViewController {
         switch trackerType {
         case .regular:
             title = "Новая Привычка"
-            //            scheduleButton.isHidden = false
         case .irregular:
             title = "Нерегулярное событие"
-            //            scheduleButton.isHidden = true
         }
     }
     
@@ -140,27 +120,26 @@ class NewTrackerVC: UIViewController {
     
     private func setupTableView() {
         view.addSubview(tableView)
-        register()
-        setupTableConstraints()
+        
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(TextCell.self, forCellReuseIdentifier: "TextCell")
+        tableView.register(LinkCell.self, forCellReuseIdentifier: "LinkCell")
         
         // delegate, dataSource
         tableView.delegate = self
         tableView.dataSource = self
         
-    }
-    
-    private func register() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-    }
-    
-    private func setupTableConstraints() {
+        tableView.separatorStyle = .none
+        tableView.layer.cornerRadius = 16 // Закругляем углы
+        tableView.layer.masksToBounds = true
+        
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 38),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: buttonStackView.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
         ])
     }
     
@@ -189,18 +168,52 @@ extension NewTrackerVC: UITableViewDataSource, UITableViewDelegate {
     
     // Укажите количество ячеек в секции
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
+        
+        switch trackerType {
+        case .regular:
+            return section == 0 ? 1 : 2
+        case .irregular:
             return 1
-        } else {return 2}
+        }
+        
     }
     // Настройка ячейки
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.selectionStyle = .none
-        cell.backgroundColor = .ypBackground
         
-        cell.textLabel?.text = "Ячейка \(indexPath.row + 1)" // настройте текст для каждой ячейки
-        return cell
+        switch trackerType {
+        case .regular:
+            if indexPath.section == 0 {
+                guard let textCell = tableView.dequeueReusableCell(withIdentifier: "TextCell", for: indexPath) as? TextCell else {return UITableViewCell()}
+                tableView.applyCornerRadius(to: textCell, at: indexPath)
+                return textCell
+            } else if indexPath.row == 0 {
+                guard let linkCell = tableView.dequeueReusableCell(withIdentifier: "LinkCell", for: indexPath) as? LinkCell else {return UITableViewCell()}
+                linkCell.configure(title: "Категория")
+                tableView.addSeparatorIfNeeded(to: linkCell , at: indexPath)
+                tableView.applyCornerRadius(to: linkCell, at: indexPath)
+                return linkCell
+            } else {
+                guard let linkCell = tableView.dequeueReusableCell(withIdentifier: "LinkCell", for: indexPath) as? LinkCell else {return UITableViewCell()}
+                linkCell.configure(title: "Расписание")
+                tableView.addSeparatorIfNeeded(to: linkCell , at: indexPath)
+                tableView.applyCornerRadius(to: linkCell, at: indexPath)
+                return linkCell
+            }
+        case .irregular:
+            if indexPath.section == 0 {
+                guard let textCell = tableView.dequeueReusableCell(withIdentifier: "TextCell", for: indexPath) as? TextCell else {return UITableViewCell()}
+                tableView.applyCornerRadius(to: textCell, at: indexPath)
+                return textCell
+            } else {
+                guard let linkCell = tableView.dequeueReusableCell(withIdentifier: "LinkCell", for: indexPath) as? LinkCell else {return UITableViewCell()}
+                linkCell.configure(title: "Категория")
+                tableView.addSeparatorIfNeeded(to: linkCell , at: indexPath)
+                tableView.applyCornerRadius(to: linkCell, at: indexPath)
+                return linkCell
+            }
+        }
+        
+        
     }
     
     // MARK: - UITableViewDelegate
@@ -216,6 +229,17 @@ extension NewTrackerVC: UITableViewDataSource, UITableViewDelegate {
     }
     // высота ячейки
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        75.0
+        return 75.0
+    }
+    // отступы между секциями
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 24
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView()
+        footerView.backgroundColor = UIColor.clear
+        return footerView
     }
 }

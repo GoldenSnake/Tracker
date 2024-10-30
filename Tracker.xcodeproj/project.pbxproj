@@ -17,6 +17,8 @@
 		013C22562CD175EB0047EF9B /* ScheduleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22552CD175EB0047EF9B /* ScheduleCell.swift */; };
 		013C22582CD189B10047EF9B /* ApplyCornerRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22572CD189B10047EF9B /* ApplyCornerRadius.swift */; };
 		013C225A2CD18CDC0047EF9B /* AddSeparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22592CD18CDC0047EF9B /* AddSeparator.swift */; };
+		013C225D2CD18EB60047EF9B /* TextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C225C2CD18EB60047EF9B /* TextCell.swift */; };
+		013C225F2CD18ECA0047EF9B /* LinkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C225E2CD18ECA0047EF9B /* LinkCell.swift */; };
 		014C73322CAF66F2007DC80C /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014C73312CAF66F2007DC80C /* TrackersViewController.swift */; };
 		014C73342CAF6716007DC80C /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014C73332CAF6716007DC80C /* StatisticsViewController.swift */; };
 		014C73362CAF6869007DC80C /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014C73352CAF6869007DC80C /* TabBarController.swift */; };
@@ -42,6 +44,8 @@
 		013C22552CD175EB0047EF9B /* ScheduleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleCell.swift; sourceTree = "<group>"; };
 		013C22572CD189B10047EF9B /* ApplyCornerRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyCornerRadius.swift; sourceTree = "<group>"; };
 		013C22592CD18CDC0047EF9B /* AddSeparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSeparator.swift; sourceTree = "<group>"; };
+		013C225C2CD18EB60047EF9B /* TextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCell.swift; sourceTree = "<group>"; };
+		013C225E2CD18ECA0047EF9B /* LinkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkCell.swift; sourceTree = "<group>"; };
 		014C73312CAF66F2007DC80C /* TrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
 		014C73332CAF6716007DC80C /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		014C73352CAF6869007DC80C /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
@@ -74,6 +78,7 @@
 			children = (
 				013C22492CD05FC90047EF9B /* AddTrackerViewController.swift */,
 				013C224C2CD10C6A0047EF9B /* NewTrackerVC.swift */,
+				013C225B2CD18E9F0047EF9B /* Cells */,
 			);
 			path = "New Tracker";
 			sourceTree = "<group>";
@@ -85,6 +90,15 @@
 				013C22552CD175EB0047EF9B /* ScheduleCell.swift */,
 			);
 			path = Schedule;
+			sourceTree = "<group>";
+		};
+		013C225B2CD18E9F0047EF9B /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				013C225C2CD18EB60047EF9B /* TextCell.swift */,
+				013C225E2CD18ECA0047EF9B /* LinkCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		014C732F2CAF6662007DC80C /* Statistics */ = {
@@ -248,9 +262,11 @@
 				013C22502CD141C10047EF9B /* ScheduleViewController.swift in Sources */,
 				013C224D2CD10C6A0047EF9B /* NewTrackerVC.swift in Sources */,
 				01CB9C742CAF522B00BD647A /* AppDelegate.swift in Sources */,
+				013C225F2CD18ECA0047EF9B /* LinkCell.swift in Sources */,
 				015A82372CBF227F00A6B822 /* TrackerCategory.swift in Sources */,
 				013C22522CD15EB70047EF9B /* ActionButton.swift in Sources */,
 				015A823C2CBF23EE00A6B822 /* Week.swift in Sources */,
+				013C225D2CD18EB60047EF9B /* TextCell.swift in Sources */,
 				013C22442CC9D0E40047EF9B /* GeometricParams.swift in Sources */,
 				014C73362CAF6869007DC80C /* TabBarController.swift in Sources */,
 				01A840402CBD16C100F45ACC /* EmptyStateView.swift in Sources */,
