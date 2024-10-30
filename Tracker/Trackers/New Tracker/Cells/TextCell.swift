@@ -29,6 +29,7 @@ final class TextCell: UITableViewCell {
         textField.borderStyle = .none
         textField.backgroundColor = .clear
         textField.returnKeyType = .go
+        textField.autocorrectionType = .no
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         
         textField.delegate = self
@@ -55,7 +56,7 @@ extension TextCell: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // Получаем текущий текст, включая добавленное значение
+        // Получаем текущий текст
         let currentText = textField.text ?? ""
         let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
         

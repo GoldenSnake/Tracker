@@ -191,10 +191,6 @@ class TrackersCell: UICollectionViewCell {
         isCompleted.toggle()
         configureViewState()
         delegate?.trackerCellDidChangeCompletion(for: self, to: isCompleted)
-        
-//        print("Complete button tapped")
-//        completeButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
-//        completeButton.alpha = 0.5
     }
     
 }
