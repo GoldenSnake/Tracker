@@ -1,8 +1,8 @@
 
 import Foundation
 
-enum Week: CaseIterable {
-    case monday, tuesday, wednesday, thursday, friday, saturday, sunday
+enum Weekday: Int, CaseIterable {
+    case sunday = 1, monday, tuesday, wednesday, thursday, friday, saturday
     
     var name: String {
         switch self {
@@ -22,4 +22,9 @@ enum Week: CaseIterable {
             "Воскресенье"
         }
     }
+    
+    init(date: Date) {
+            self = Weekday(rawValue: Calendar.current.component(.weekday, from: date)) ?? .monday
+        }
+    
 }

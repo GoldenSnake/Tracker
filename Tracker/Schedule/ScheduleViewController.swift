@@ -8,6 +8,8 @@ final class ScheduleViewController: UIViewController {
     
     private let doneButton = ActionButton(type: .system)
     
+    private var selectedDays: [Bool] = [false, false, false, false, false, false, false]
+    
     private let scheduleTableView = UITableView()
     
     // MARK: - View Lifecycle
@@ -79,6 +81,9 @@ final class ScheduleViewController: UIViewController {
     
     @objc private func doneButtonTapped() {
         // Обработка нажатия на кнопку
+//        if let previousVC = navigationController?.viewControllers[navigationController!.viewControllers.count - 2] as? NewTrackerVC {
+//                   previousVC.selectedDays = selectedDays
+//               }
         
         navigationController?.popViewController(animated: true)
     }
@@ -95,10 +100,12 @@ extension ScheduleViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ScheduleCell", for: indexPath) as? ScheduleCell else {return UITableViewCell()}
         
         // данные для ячейки
-        let weekday = Week.allCases[indexPath.row]
-        let isOn = false //состояние переключателя по умолчанию
+        let weekday = Weekday.allCases[indexPath.row]
+        let isOn = selectedDays[indexPath.row]
+        
         cell.configure(with: weekday, isOn: isOn) { isOn in
             // Обработка переключения, например, обновление состояния
+            self.selectedDays[indexPath.row] = isOn
             print("\(weekday.name) is \(isOn ? "on" : "off")")
         }
         

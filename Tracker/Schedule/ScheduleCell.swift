@@ -14,7 +14,8 @@ final class ScheduleCell: UITableViewCell {
         setupDayLabel()
         setupDaySwitch()
         
-        castom()
+        self.backgroundColor = .ypBackground
+        self.selectionStyle = .none
         
         NSLayoutConstraint.activate([
             dayLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -30,7 +31,7 @@ final class ScheduleCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with weekday: Week, isOn: Bool, onToggle: @escaping (Bool) -> Void) {
+    func configure(with weekday: Weekday, isOn: Bool, onToggle: @escaping (Bool) -> Void) {
         dayLabel.text = weekday.name
         daySwitch.isOn = isOn
         self.onToggle = onToggle
@@ -49,11 +50,6 @@ final class ScheduleCell: UITableViewCell {
         daySwitch.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
         
         daySwitch.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    private func castom() {
-        self.backgroundColor = .ypBackground
-        self.selectionStyle = .none
     }
     
     @objc private func switchToggled(_ sender: UISwitch) {

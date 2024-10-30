@@ -8,6 +8,8 @@ class NewTrackerVC: UIViewController {
     private let createButton = ActionButton(type: .system)
     private let buttonStackView = UIStackView()
     
+    var selectedDays: [String] = []
+    
     // TableView
     private let tableView = UITableView()
     
@@ -243,3 +245,6 @@ extension NewTrackerVC: UITableViewDataSource, UITableViewDelegate {
         return footerView
     }
 }
+
+
+
