@@ -8,7 +8,7 @@ protocol TrackerCellDelegate: AnyObject {
 class TrackersCell: UICollectionViewCell {
     
     // MARK: - Public Properties
-       weak var delegate: TrackerCellDelegate?
+    weak var delegate: TrackerCellDelegate?
     
     
     // MARK: - private
@@ -45,42 +45,47 @@ class TrackersCell: UICollectionViewCell {
     }
     
     func config(with tracker: Tracker, numberOfCompletions: Int, isCompleted: Bool, completionIsEnabled: Bool) {
-            self.isCompleted = isCompleted
-            self.numberOfCompletions = numberOfCompletions
-            self.color = tracker.color
-            
-            cardView.backgroundColor = tracker.color
-            completeButton.isEnabled = completionIsEnabled
-            titleLabel.text = tracker.name
-            emojiLabel.text = tracker.emoji
-            
-            configureViewState()
-        }
+        self.isCompleted = isCompleted
+        self.numberOfCompletions = numberOfCompletions
+        self.color = tracker.color
+        
+        cardView.backgroundColor = tracker.color
+        completeButton.isEnabled = completionIsEnabled
+        titleLabel.text = tracker.name
+        emojiLabel.text = tracker.emoji
+        
+        configureViewState()
+    }
     
     
     // MARK: - private
     
     private func configureViewState() {
-           if isCompleted {
-               completeButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
-               completeButton.backgroundColor = color.withAlphaComponent(0.3)
-           } else {
-               completeButton.setImage(UIImage(systemName: "plus"), for: .normal)
-               completeButton.backgroundColor = color
-           }
-           
-           let remainder100 = numberOfCompletions % 100
-           let remainder10 = numberOfCompletions % 10
-           if remainder100 >= 11 && remainder100 <= 14 {
-               counterLabel.text = "\(numberOfCompletions) дней"
-           } else if remainder10 == 1 {
-               counterLabel.text = "\(numberOfCompletions) день"
-           } else if remainder10 >= 2 && remainder10 <= 4 {
-               counterLabel.text = "\(numberOfCompletions) дня"
-           } else {
-               counterLabel.text = "\(numberOfCompletions) дней"
-           }
-       }
+        if isCompleted {
+            completeButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+            completeButton.backgroundColor = color.withAlphaComponent(0.3)
+        } else {
+            completeButton.setImage(UIImage(systemName: "plus"), for: .normal)
+            completeButton.backgroundColor = color
+        }
+        
+        let lastDigit = numberOfCompletions % 10
+        let lastTwoDigits = numberOfCompletions % 100
+        
+        if lastTwoDigits >= 11 && lastTwoDigits <= 14 {
+            counterLabel.text = "\(numberOfCompletions) дней"
+        } else {
+            
+            switch lastDigit {
+            case 1:
+                counterLabel.text = "\(numberOfCompletions) день"
+            case 2, 3, 4:
+                counterLabel.text = "\(numberOfCompletions) дня"
+            default:
+                counterLabel.text = "\(numberOfCompletions) дней"
+            }
+        }
+    }
     
     private func setupCircleVeiw() {
         
