@@ -2,9 +2,9 @@ import UIKit
 
 extension UITableView {
     func addSeparatorIfNeeded(to cell: UITableViewCell, at indexPath: IndexPath) {
-        // Убедитесь, что в ячейке нет уже добавленного разделителя
+        // Проверка  - в ячейке нет уже добавленного разделителя
         for subview in cell.contentView.subviews {
-            if subview.tag == 1001 { // Установим уникальный тег для разделителя
+            if subview.tag == 1001 { // уникальный тег для разделителя
                 subview.removeFromSuperview()
             }
         }
@@ -14,7 +14,7 @@ extension UITableView {
             let separator = UIView()
             separator.backgroundColor = .ypGray
             separator.translatesAutoresizingMaskIntoConstraints = false
-            separator.tag = 1001 // Устанавливаем тег для разделителя
+            separator.tag = 1001
             
             cell.contentView.addSubview(separator)
             

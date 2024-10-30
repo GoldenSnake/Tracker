@@ -3,7 +3,7 @@
 import UIKit
 
 class TrackersViewController: UIViewController {
-
+    
     static let notificationName = NSNotification.Name("AddNewTracker")
     // MARK: - Private Properties
     
@@ -35,12 +35,9 @@ class TrackersViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .ypWhite
         
-//        makeMockData()
         view.addSubview(emptyStateView)
-        //        updateView()
         
         setupCollectionVeiw()
         setupConstraints()
@@ -51,46 +48,39 @@ class TrackersViewController: UIViewController {
     }
     
     deinit {
-            NotificationCenter.default.removeObserver(self, name: TrackersViewController.notificationName, object: nil)
-        }
+        NotificationCenter.default.removeObserver(self, name: TrackersViewController.notificationName, object: nil)
+    }
     
     // MARK: - Private Methods
     
     private func update() {
-            let completedIrregulars = Set(
-                allTrackers.filter { tracker in
-                    !tracker.isRegular &&
-                    completedTrackers.first { $0.trackerId == tracker.id } != nil
-                }
-            )
-            completedIds = Set(
-                completedTrackers
-                    .filter { Calendar.current.isDate($0.date, inSameDayAs: currentDate) }
-                    .map { $0.trackerId }
-            )
-            
-            let weekday = Weekday(date: currentDate)
-            let selectedTrackers = allTrackers.filter { tracker in
-                if let days = tracker.days {
-                    return days.contains(weekday)
-                } else {
-                    return completedIds.contains(tracker.id) || !completedIrregulars.contains(tracker)
-                }
+        let completedIrregulars = Set(
+            allTrackers.filter { tracker in
+                !tracker.isRegular &&
+                completedTrackers.first { $0.trackerId == tracker.id } != nil
             }
-            categories = selectedTrackers.isEmpty ? [] : [TrackerCategory(name: "Общая категория", trackers: selectedTrackers)]
-            
-            collectionView.reloadData()
-            
-            collectionView.isHidden = selectedTrackers.isEmpty
-            emptyStateView.isHidden = !selectedTrackers.isEmpty
-        }
+        )
+        completedIds = Set(
+            completedTrackers
+                .filter { Calendar.current.isDate($0.date, inSameDayAs: currentDate) }
+                .map { $0.trackerId }
+        )
         
-    
-    //    private func updateView() {
-    //        if trackers.isEmpty {
-    //            view.addSubview(emptyStateView)
-    //        }
-    //    }
+        let weekday = Weekday(date: currentDate)
+        let selectedTrackers = allTrackers.filter { tracker in
+            if let days = tracker.days {
+                return days.contains(weekday)
+            } else {
+                return completedIds.contains(tracker.id) || !completedIrregulars.contains(tracker)
+            }
+        }
+        categories = selectedTrackers.isEmpty ? [] : [TrackerCategory(name: "Общая категория", trackers: selectedTrackers)]
+        
+        collectionView.reloadData()
+        
+        collectionView.isHidden = selectedTrackers.isEmpty
+        emptyStateView.isHidden = !selectedTrackers.isEmpty
+    }
     
     private func setupCollectionVeiw() {
         view.addSubview(collectionView)
@@ -102,7 +92,6 @@ class TrackersViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        
         //collectionView
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -126,9 +115,7 @@ class TrackersViewController: UIViewController {
         collectionView.register(TrackerCategoryHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
     }
     
-    
-    /// MARK: - NavigationBar
-    
+    //NavigationBar
     private func setupNavigationBar() {
         setupNavBarItemLeft()
         setupNavBarItemRight()
@@ -170,14 +157,14 @@ class TrackersViewController: UIViewController {
     // MARK: - Actions
     
     @objc
-      private func addNewTracker(_ notification: Notification) {
-          guard let tracker = notification.object as? Tracker else { return }
-          allTrackers.append(tracker)
-          update()
-      }
+    private func addNewTracker(_ notification: Notification) {
+        guard let tracker = notification.object as? Tracker else { return }
+        allTrackers.append(tracker)
+        update()
+    }
     
     @objc private func addTrackerButtonDidTap() {
-        print("add tapped!")
+        print("Add Tracker Button Tap")
         let viewController = AddTrackerViewController()
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.modalPresentationStyle = .formSheet
@@ -189,8 +176,7 @@ class TrackersViewController: UIViewController {
         datePicker.removeFromSuperview()
         
         update()
-        
-        
+    
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy"
         let formattedDate = dateFormatter.string(from: currentDate)
@@ -202,7 +188,7 @@ class TrackersViewController: UIViewController {
 // MARK: - UICollectionViewDelegate
 extension TrackersViewController: UICollectionViewDelegate {
     
-    //header
+    //header для категорий
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifier, for: indexPath) as? TrackerCategoryHeader else {return UICollectionReusableView()}
         
@@ -225,17 +211,16 @@ extension TrackersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return categories[section].trackers.count
     }
-    
+    //Настройка ячейки
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        //создаем ячейку
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? TrackersCell else {return UICollectionViewCell()}
         cell.prepareForReuse()
         let tracker = categories[indexPath.section].trackers[indexPath.row]
-                cell.config(with: tracker,
-                            numberOfCompletions: completionsCounter[tracker.id] ?? 0,
-                            isCompleted: completedIds.contains(tracker.id),
-                            completionIsEnabled: currentDate <= Date())
-                cell.delegate = self
+        cell.config(with: tracker,
+                    numberOfCompletions: completionsCounter[tracker.id] ?? 0,
+                    isCompleted: completedIds.contains(tracker.id),
+                    completionIsEnabled: currentDate <= Date())
+        cell.delegate = self
         return cell
     }
 }
@@ -244,7 +229,7 @@ extension TrackersViewController: UICollectionViewDataSource {
 
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     
-    // Метод для задания размера ячейки
+    // метод для размера ячейки
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let availableWidth = collectionView.frame.width - params.paddingWidth
         let cellWidth =  availableWidth / CGFloat(params.cellCount)
@@ -252,7 +237,6 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     }
     
     //отступы для секций в коллекциях insetForSectionAt 
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 12, left: params.leftInset, bottom: 16, right: params.rightInset)
     }
@@ -267,7 +251,7 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         return params.cellSpacing
     }
     
-    // header
+    // header размеры
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 19)
     }

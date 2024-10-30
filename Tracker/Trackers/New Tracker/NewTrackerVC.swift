@@ -18,15 +18,14 @@ final class NewTrackerVC: UIViewController {
     
     // MARK: - Init
     
-    // Определяем тип экрана
+    // тип экрана
     enum TrackerType {
-        case regular // Привычка
-        case irregular // Нерегулярное событие
+        case regular
+        case irregular
     }
     
     private var trackerType: TrackerType
     
-    // Инициализатор для передачи типа экрана
     init(trackerType: TrackerType) {
         self.trackerType = trackerType
         super.init(nibName: nil, bundle: nil)
@@ -53,8 +52,8 @@ final class NewTrackerVC: UIViewController {
         setupTableView()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-                tapGesture.cancelsTouchesInView = false
-                view.addGestureRecognizer(tapGesture)
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
     }
     
     // MARK: - Private Methods
@@ -90,9 +89,9 @@ final class NewTrackerVC: UIViewController {
     }
     
     private func configureViewState() {
-           let daysAreValid = days?.isEmpty == false || trackerType == .irregular
-           createButton.isEnabled = !name.isEmpty && daysAreValid
-       }
+        let daysAreValid = days?.isEmpty == false || trackerType == .irregular
+        createButton.isEnabled = !name.isEmpty && daysAreValid
+    }
     
     private func setupButtonStackView() {
         view.addSubview(buttonStackView)
@@ -145,7 +144,7 @@ final class NewTrackerVC: UIViewController {
         tableView.dataSource = self
         
         tableView.separatorStyle = .none
-        tableView.layer.cornerRadius = 16 // Закругляем углы
+        tableView.layer.cornerRadius = 16
         tableView.layer.masksToBounds = true
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -162,8 +161,8 @@ final class NewTrackerVC: UIViewController {
     // MARK: - Actions
     
     @objc private func dismissKeyboard() {
-            view.endEditing(true)
-        }
+        view.endEditing(true)
+    }
     
     @objc private func cancelButtonTapped() {
         self.dismiss(animated: true)
@@ -195,20 +194,20 @@ final class NewTrackerVC: UIViewController {
         let emoji = [
             "🌺", "😻", "❤️", "💫", "🥇","🌞", "🌙", "⭐️","🍀", "🌿", "🌳","🍎", "🥑", "🍒","🏃‍♂️", "🚴‍♀️","🎨", "🎸", "🎮", "🎧", "📚", "✍️","💡", "💻","😇", "🤗", "🥰", "😴", "🤓", "😎","🌍", "✈️", "🚀", "🚲", "🏕️","🎉", "🎈", "🎂", "🎁", "🎄"
         ].randomElement()!
-                let tracker = Tracker(id: UUID(), name: name, color: randomColor, emoji: emoji, days: days)
-                NotificationCenter.default.post(name: TrackersViewController.notificationName, object: tracker)
-                self.dismiss(animated: true)
+        let tracker = Tracker(id: UUID(), name: name, color: randomColor, emoji: emoji, days: days)
+        NotificationCenter.default.post(name: TrackersViewController.notificationName, object: tracker)
+        self.dismiss(animated: true)
     }
 }
 
 extension NewTrackerVC: UITableViewDataSource, UITableViewDelegate {
     
-    // Укажите количество секций (по умолчанию 1)
+    //  количество секций
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
-    // Укажите количество ячеек в секции
+    // количество ячеек в секции
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         switch trackerType {
@@ -232,7 +231,7 @@ extension NewTrackerVC: UITableViewDataSource, UITableViewDelegate {
             return UITableViewCell()
         }
     }
-
+    
     private func configureTextCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: textCellID, for: indexPath) as? TextCell else {
             return UITableViewCell()
@@ -244,7 +243,7 @@ extension NewTrackerVC: UITableViewDataSource, UITableViewDelegate {
         }
         return cell
     }
-
+    
     private func configureLinkCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: linkCellID, for: indexPath) as? LinkCell else {
             return UITableViewCell()
@@ -258,7 +257,7 @@ extension NewTrackerVC: UITableViewDataSource, UITableViewDelegate {
         
         return cell
     }
-
+    
     private func getTitleAndCaptionForLinkCell(at row: Int) -> (String, String) {
         switch row {
         case 0:
@@ -275,7 +274,7 @@ extension NewTrackerVC: UITableViewDataSource, UITableViewDelegate {
             return ("", "")
         }
     }
-
+    
     
     // MARK: - UITableViewDelegate
     
@@ -298,6 +297,7 @@ extension NewTrackerVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75.0
     }
+    
     // отступы между секциями
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
