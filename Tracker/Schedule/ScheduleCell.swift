@@ -3,7 +3,13 @@ import UIKit
 
 final class ScheduleCell: UITableViewCell {
     
-    private let dayLabel = UILabel()
+    private lazy var dayLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 17, weight: .regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let daySwitch = UISwitch()
     
     private var onToggle: ((Bool) -> Void)?
@@ -11,7 +17,7 @@ final class ScheduleCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super .init(style: style, reuseIdentifier: reuseIdentifier)
         
-        setupDayLabel()
+        contentView.addSubview(dayLabel)
         setupDaySwitch()
         
         self.backgroundColor = .ypBackground

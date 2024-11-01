@@ -5,7 +5,7 @@ protocol TrackerCellDelegate: AnyObject {
     func trackerCellDidChangeCompletion(for cell: TrackersCell, to isCompleted: Bool)
 }
 
-class TrackersCell: UICollectionViewCell {
+final class TrackersCell: UICollectionViewCell {
     
     // MARK: - Public Properties
     weak var delegate: TrackerCellDelegate?
@@ -61,13 +61,8 @@ class TrackersCell: UICollectionViewCell {
     // MARK: - private
     
     private func configureViewState() {
-        if isCompleted {
-            completeButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
-            completeButton.backgroundColor = color.withAlphaComponent(0.3)
-        } else {
-            completeButton.setImage(UIImage(systemName: "plus"), for: .normal)
-            completeButton.backgroundColor = color
-        }
+        completeButton.setImage(UIImage(systemName: isCompleted ? "checkmark" : "plus"), for: .normal)
+        completeButton.backgroundColor = color.withAlphaComponent(isCompleted ? 0.3 : 1)
         
         let lastDigit = numberOfCompletions % 10
         let lastTwoDigits = numberOfCompletions % 100
@@ -75,7 +70,6 @@ class TrackersCell: UICollectionViewCell {
         if lastTwoDigits >= 11 && lastTwoDigits <= 14 {
             counterLabel.text = "\(numberOfCompletions) дней"
         } else {
-            
             switch lastDigit {
             case 1:
                 counterLabel.text = "\(numberOfCompletions) день"

@@ -1,7 +1,7 @@
 
 import UIKit
 
-class AddTrackerViewController: UIViewController {
+final class AddTrackerViewController: UIViewController {
     
     // MARK: - Private Properties
     

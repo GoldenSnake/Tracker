@@ -2,7 +2,7 @@
 
 import UIKit
 
-class TrackersViewController: UIViewController {
+final class TrackersViewController: UIViewController {
     
     static let notificationName = NSNotification.Name("AddNewTracker")
     // MARK: - Private Properties
@@ -137,7 +137,7 @@ class TrackersViewController: UIViewController {
     
     private func setupNavBarItemRight() {
         datePicker.datePickerMode = .date
-        datePicker.locale = Locale(identifier: "ru_RU")
+//        datePicker.locale = Locale(identifier: "ru_RU")
         datePicker.preferredDatePickerStyle = .compact
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         

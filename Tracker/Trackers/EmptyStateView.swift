@@ -1,7 +1,7 @@
 
 import UIKit
 
-class EmptyStateView: UIView{
+final class EmptyStateView: UIView{
     
     private let image = UIImageView()
     private let label = UILabel()
