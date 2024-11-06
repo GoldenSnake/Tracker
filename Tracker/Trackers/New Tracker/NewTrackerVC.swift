@@ -307,11 +307,7 @@ final class NewTrackerVC: UIViewController {
     }
     
     @objc private func createButtonTapped() {
-        
-        guard let randomColor = colors.randomElement() else {return}
-        guard let randomEmoji = emojis.randomElement() else {return}
-        
-        let tracker = Tracker(id: UUID(), name: name, color: randomColor, emoji: randomEmoji, days: days)
+        let tracker = Tracker(id: UUID(), name: name, color: color, emoji: emoji, days: days)
         NotificationCenter.default.post(name: TrackersViewController.notificationName, object: tracker)
         self.dismiss(animated: true)
     }
