@@ -104,6 +104,7 @@
 		013C225B2CD18E9F0047EF9B /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				0167319A2CDACDC6009E040A /* EmojiCell.swift */,
 				013C225C2CD18EB60047EF9B /* TextCell.swift */,
 				013C225E2CD18ECA0047EF9B /* LinkCell.swift */,
 				016731982CDA69AC009E040A /* ColorCell.swift */,
@@ -158,7 +159,6 @@
 		01CB9C672CAF522B00BD647A = {
 			isa = PBXGroup;
 			children = (
-				0167319A2CDACDC6009E040A /* EmojiCell.swift */,
 				01CB9C722CAF522B00BD647A /* Tracker */,
 				01CB9C712CAF522B00BD647A /* Products */,
 			);
