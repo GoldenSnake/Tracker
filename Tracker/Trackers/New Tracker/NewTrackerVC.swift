@@ -42,18 +42,9 @@ final class NewTrackerVC: UIViewController {
     
     private var selectedCells: [Int: IndexPath] = [:]
     
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.keyboardDismissMode = .onDrag
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        return scrollView
-    }()
+    private var scrollView = UIScrollView()
+    private var contentView = UIView()
     
-    private lazy var contentView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
     
     // TableView
     private let tableView = UITableView()
@@ -117,7 +108,8 @@ final class NewTrackerVC: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        
+        setupContentView()
+        setupScroll()
         setupCancelButton()
         setupCreateButton()
         setupButtonStackView()
@@ -130,6 +122,7 @@ final class NewTrackerVC: UIViewController {
         
         contentView.addSubview(tableView)
         contentView.addSubview(collectionView)
+        contentView.addSubview(buttonStackView)
         scrollView.addSubview(contentView)
         view.addSubview(scrollView)
         
@@ -141,9 +134,9 @@ final class NewTrackerVC: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-            super.viewDidLayoutSubviews()
-            updateTableViewHeight()
-        }
+        super.viewDidLayoutSubviews()
+        updateTableViewHeight()
+    }
     
     // MARK: - Private Methods
     
@@ -184,8 +177,6 @@ final class NewTrackerVC: UIViewController {
     }
     
     private func setupButtonStackView() {
-        view.addSubview(buttonStackView)
-        
         buttonStackView.axis = .horizontal
         buttonStackView.spacing = 8
         buttonStackView.distribution = .fillEqually
@@ -194,13 +185,6 @@ final class NewTrackerVC: UIViewController {
         buttonStackView.addArrangedSubview(createButton)
         
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            buttonStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            buttonStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            buttonStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            buttonStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
     }
     
     
@@ -218,6 +202,15 @@ final class NewTrackerVC: UIViewController {
         case .irregular:
             title = "Нерегулярное событие"
         }
+    }
+    
+    private func setupScroll() {
+        scrollView.keyboardDismissMode = .onDrag
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private func setupContentView() {
+        contentView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     //TableView
@@ -261,9 +254,9 @@ final class NewTrackerVC: UIViewController {
     }
     
     private func updateTableViewHeight() {
-           tableView.layoutIfNeeded()
-           tableViewHeightConstraint?.constant = tableView.contentSize.height
-       }
+        tableView.layoutIfNeeded()
+        tableViewHeightConstraint?.constant = tableView.contentSize.height
+    }
     
     private func setupConstraints() {
         let sectionHeight = cellSize * CGFloat(sectionLayout.rowCount) + sectionLayout.totalInsetHeight + Constants.headerHeight
@@ -273,17 +266,19 @@ final class NewTrackerVC: UIViewController {
         tableViewHeightConstraint?.isActive = true
         
         NSLayoutConstraint.activate([
-            
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: buttonStackView.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            
+            // Ограничение высоты contentView с низким приоритетом
+            contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor, constant: 1).withPriority(.defaultLow),
             
             tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
@@ -292,7 +287,12 @@ final class NewTrackerVC: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 16),
-            collectionView.heightAnchor.constraint(equalToConstant: totalCollectionHeight)
+            collectionView.heightAnchor.constraint(equalToConstant: totalCollectionHeight),
+            
+            buttonStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            buttonStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            buttonStackView.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 16),
+            buttonStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
     
@@ -567,5 +567,11 @@ extension NewTrackerVC: UICollectionViewDelegate {
             }
             configureViewState()
         }
+    }
+}
+extension NSLayoutConstraint {
+    func withPriority(_ priority: UILayoutPriority) -> NSLayoutConstraint {
+        self.priority = priority
+        return self
     }
 }
