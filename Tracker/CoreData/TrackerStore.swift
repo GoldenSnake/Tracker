@@ -7,6 +7,7 @@ enum TrackerError: Error {
     case decodingErrorInvalidName
     case decodingErrorInvalidColorHex
     case decodingErrorInvalidEmoji
+    case decodingErrorInvalidDays
 }
 
 final class TrackerStore {
@@ -43,11 +44,12 @@ final class TrackerStore {
         trackerCoreData.id = tracker.id
         trackerCoreData.name = tracker.name
         trackerCoreData.colorHex = uiColorMarshalling.hexString(from: tracker.color)
-        //        trackerCoreData.days = tracker.days
+        trackerCoreData.days = convertDaysToString(days: tracker.days)
         trackerCoreData.emoji = tracker.emoji
     }
     
     func tracker(from trackerCoreData: TrackerCoreData) throws -> Tracker {
+        
         guard let id = trackerCoreData.id else {
             throw TrackerError.decodingErrorInvalidId
         }
@@ -60,10 +62,24 @@ final class TrackerStore {
         guard let emoji = trackerCoreData.emoji else {
             throw TrackerError.decodingErrorInvalidEmoji
         }
-        return Tracker(id: id,
-                       name: name,
-                       color: uiColorMarshalling.color(from: colorHex),
-                       emoji: emoji,
-                       days: nil)
+        
+        if trackerCoreData.days == nil {
+            print("nil days")
+            return Tracker(id: id,
+                           name: name,
+                           color: uiColorMarshalling.color(from: colorHex),
+                           emoji: emoji,
+                           days: nil)
+        } else {
+            guard let days = trackerCoreData.days else {
+                throw TrackerError.decodingErrorInvalidDays
+            }
+            return Tracker(id: id,
+                           name: name,
+                           color: uiColorMarshalling.color(from: colorHex),
+                           emoji: emoji,
+                           days: convertStringToDays(daysString: days))
+        }
     }
+        
 }
