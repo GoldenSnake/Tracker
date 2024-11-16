@@ -7,13 +7,16 @@ final class TrackersViewController: UIViewController {
     static let notificationName = NSNotification.Name("AddNewTracker")
     // MARK: - Private Properties
     
-    private let trackerStore = TrackerStore()
+    private lazy var trackerStore: TrackerStoreProtocol = {
+        TrackerStore(delegate: self, for: currentDate)
+    }()
     
     private var categories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
     private var currentDate: Date = Date()
     private var completedIds: Set<UUID> = []
-    private var allTrackers: [Tracker] = []
+    
+    private var allTrackers: [Tracker] = [] // All created trackers
     private var completionsCounter: [UUID: Int] = [:]
     
     private let emptyStateView: UIView = {
@@ -47,13 +50,14 @@ final class TrackersViewController: UIViewController {
         view.backgroundColor = .ypWhite
         
         view.addSubview(emptyStateView)
-        
+        configureViewState()
         setupCollectionVeiw()
         setupConstraints()
         setupNavigationBar()
         collectionView.isHidden = true
-        loadTrackers()
-        update()
+        
+//        allTrackers = trackerStore.savedTrackers
+        configureViewState()
         
         NotificationCenter.default.addObserver(self, selector: #selector(addNewTracker), name: TrackersViewController.notificationName, object: nil)
     }
@@ -64,16 +68,10 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Private Methods
     
-    private func loadTrackers() { // загружаем в массив данные из памяти при запуске
-        allTrackers = try! trackerStore.fetchTrackers()
-        if allTrackers.isEmpty {
-            print("Массив пуст.")
-        } else {
-            allTrackers.forEach { tracker in
-                print("load tracker: \(tracker.name)")
-            }
-        }
-    }
+    private func configureViewState() {
+           collectionView.isHidden = trackerStore.isEmpty
+           emptyStateView.isHidden = !trackerStore.isEmpty
+       }
     
     private func update() {
         let completedIrregulars = Set(
@@ -159,7 +157,7 @@ final class TrackersViewController: UIViewController {
     
     private func setupNavBarItemRight() {
         datePicker.datePickerMode = .date
-        //        datePicker.locale = Locale(identifier: "ru_RU")
+        datePicker.locale = Locale(identifier: "ru_RU")
         datePicker.preferredDatePickerStyle = .compact
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         
@@ -181,9 +179,7 @@ final class TrackersViewController: UIViewController {
     @objc
     private func addNewTracker(_ notification: Notification) {
         guard let tracker = notification.object as? Tracker else { return }
-        allTrackers.append(tracker)
-        trackerStore.addNewTracker(tracker)//записываем в память
-        update()
+        trackerStore.addNewTracker(tracker)
     }
     
     @objc private func addTrackerButtonDidTap() {
@@ -215,7 +211,7 @@ extension TrackersViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifier, for: indexPath) as? TrackerCategoryHeader else {return UICollectionReusableView()}
         
-        header.config(with: categories[indexPath.section])
+        header.config(with: trackerStore.sectionName(for: indexPath.section))
         return header
     }
 }
@@ -227,21 +223,22 @@ extension TrackersViewController: UICollectionViewDataSource {
     
     // кол-во секций
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return categories.count
+        return trackerStore.numberOfSections
     }
     
     // Количество элементов в коллекции
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return categories[section].trackers.count
+        return trackerStore.numberOfItemsInSection(section)
     }
     //Настройка ячейки
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? TrackersCell else {return UICollectionViewCell()}
-        cell.prepareForReuse()
-        let tracker = categories[indexPath.section].trackers[indexPath.row]
-        cell.config(with: tracker,
-                    numberOfCompletions: completionsCounter[tracker.id] ?? 0,
-                    isCompleted: completedIds.contains(tracker.id),
+        
+        
+        let completionStatus = trackerStore.completionStatus(for: indexPath)
+        cell.config(with: completionStatus.tracker,
+                    numberOfCompletions: completionStatus.numberOfCompletions,
+                    isCompleted: completionStatus.isCompleted,
                     completionIsEnabled: currentDate <= Date())
         cell.delegate = self
         return cell
@@ -298,5 +295,37 @@ extension TrackersViewController: TrackerCellDelegate {
                 completionsCounter[tracker.id] = currentCount - 1
             }
         }
+    }
+}
+
+// MARK: - TrackerStoreDelegate
+extension TrackersViewController: TrackerStoreDelegate {
+    func didUpdate(_ update: TrackerStoreUpdate) {
+//        allTrackers = trackerStore.savedTrackers
+//        if allTrackers.isEmpty {
+//            print("Массив пуст.")
+//        } else {
+//            allTrackers.forEach { tracker in
+//                print("load tracker: \(tracker.name)")
+//            }
+//        }
+        
+        collectionView.performBatchUpdates({
+            if !update.deletedSections.isEmpty {
+                           collectionView.deleteSections(IndexSet(update.deletedSections))
+                       }
+                       if !update.insertedSections.isEmpty {
+                           collectionView.insertSections(IndexSet(update.insertedSections))
+                       }
+            
+            collectionView.insertItems(at: update.insertedIndexes)
+            collectionView.deleteItems(at: update.deletedIndexes)
+            collectionView.reloadItems(at: update.updatedIndexes)
+
+            for move in update.movedIndexes{
+                collectionView.moveItem(at: move.from, to: move.to)
+            }
+        }, completion: nil)
+        configureViewState()
     }
 }

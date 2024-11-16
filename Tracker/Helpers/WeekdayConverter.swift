@@ -1,17 +1,25 @@
-
 import Foundation
 
-func convertDaysToString(days: Set<Weekday>?) -> String? {
-    guard let days = days else { return nil }
-    return days.map { String($0.rawValue) }.joined(separator: ",")
-}
+extension Set where Element == Weekday {
+    init?(rawValue: String?) {
+        guard let rawValue = rawValue else {
+            return nil
+        }
 
+        let daysArray = rawValue
+            .split(separator: ",")
+            .compactMap { Weekday(rawValue: Int($0) ?? 0) }
 
-func convertStringToDays(daysString: String?) -> Set<Weekday>? {
-    guard let daysString = daysString else { return Set() }
-    
-    let dayNumbers = daysString.split(separator: ",").compactMap { Int($0) }
-    let daysSet = Set(dayNumbers.compactMap { Weekday(rawValue: $0) })
-    
-    return daysSet
+        if daysArray.isEmpty {
+            return nil
+        } else {
+            self = Set(daysArray)
+        }
+    }
+
+    func toRawString() -> String {
+        self.map { String($0.rawValue) }
+            .sorted()
+            .joined(separator: ",")
+    }
 }
