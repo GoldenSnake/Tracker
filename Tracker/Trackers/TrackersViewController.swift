@@ -56,7 +56,7 @@ final class TrackersViewController: UIViewController {
         setupNavigationBar()
         collectionView.isHidden = true
         
-//        allTrackers = trackerStore.savedTrackers
+        //        allTrackers = trackerStore.savedTrackers
         configureViewState()
         
         NotificationCenter.default.addObserver(self, selector: #selector(addNewTracker), name: TrackersViewController.notificationName, object: nil)
@@ -69,9 +69,9 @@ final class TrackersViewController: UIViewController {
     // MARK: - Private Methods
     
     private func configureViewState() {
-           collectionView.isHidden = trackerStore.isEmpty
-           emptyStateView.isHidden = !trackerStore.isEmpty
-       }
+        collectionView.isHidden = trackerStore.isEmpty
+        emptyStateView.isHidden = !trackerStore.isEmpty
+    }
     
     private func update() {
         let completedIrregulars = Set(
@@ -194,7 +194,9 @@ final class TrackersViewController: UIViewController {
         currentDate = sender.date
         datePicker.removeFromSuperview()
         
-        update()
+        trackerStore.updateDate(currentDate)
+        collectionView.reloadData()
+        configureViewState()
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy"
@@ -301,27 +303,27 @@ extension TrackersViewController: TrackerCellDelegate {
 // MARK: - TrackerStoreDelegate
 extension TrackersViewController: TrackerStoreDelegate {
     func didUpdate(_ update: TrackerStoreUpdate) {
-//        allTrackers = trackerStore.savedTrackers
-//        if allTrackers.isEmpty {
-//            print("Массив пуст.")
-//        } else {
-//            allTrackers.forEach { tracker in
-//                print("load tracker: \(tracker.name)")
-//            }
-//        }
+        //        allTrackers = trackerStore.savedTrackers
+        //        if allTrackers.isEmpty {
+        //            print("Массив пуст.")
+        //        } else {
+        //            allTrackers.forEach { tracker in
+        //                print("load tracker: \(tracker.name)")
+        //            }
+        //        }
         
         collectionView.performBatchUpdates({
             if !update.deletedSections.isEmpty {
-                           collectionView.deleteSections(IndexSet(update.deletedSections))
-                       }
-                       if !update.insertedSections.isEmpty {
-                           collectionView.insertSections(IndexSet(update.insertedSections))
-                       }
+                collectionView.deleteSections(IndexSet(update.deletedSections))
+            }
+            if !update.insertedSections.isEmpty {
+                collectionView.insertSections(IndexSet(update.insertedSections))
+            }
             
             collectionView.insertItems(at: update.insertedIndexes)
             collectionView.deleteItems(at: update.deletedIndexes)
             collectionView.reloadItems(at: update.updatedIndexes)
-
+            
             for move in update.movedIndexes{
                 collectionView.moveItem(at: move.from, to: move.to)
             }
