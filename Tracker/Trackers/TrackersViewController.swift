@@ -56,7 +56,6 @@ final class TrackersViewController: UIViewController {
         setupNavigationBar()
         collectionView.isHidden = true
         
-        //        allTrackers = trackerStore.savedTrackers
         configureViewState()
         
         NotificationCenter.default.addObserver(self, selector: #selector(addNewTracker), name: TrackersViewController.notificationName, object: nil)
@@ -284,20 +283,9 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 extension TrackersViewController: TrackerCellDelegate {
     func trackerCellDidChangeCompletion(for cell: TrackersCell, to isCompleted: Bool) {
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
-        let tracker = categories[indexPath.section].trackers[indexPath.row]
-        
-        if isCompleted {
-            completedTrackers.append(TrackerRecord(trackerId: tracker.id, date: currentDate))
-            completedIds.insert(tracker.id)
-            completionsCounter[tracker.id] = (completionsCounter[tracker.id] ?? 0) + 1
-        } else {
-            completedTrackers.removeAll { $0.trackerId == tracker.id && $0.date == currentDate }
-            completedIds.remove(tracker.id)
-            if let currentCount = completionsCounter[tracker.id], currentCount > 0 {
-                completionsCounter[tracker.id] = currentCount - 1
-            }
-        }
+        trackerStore.changeCompletion(for: indexPath, to: isCompleted)
     }
+    
 }
 
 // MARK: - TrackerStoreDelegate
