@@ -11,7 +11,7 @@ final class TrackersViewController: UIViewController {
         TrackerStore(delegate: self, for: currentDate)
     }()
     
-    private var currentDate: Date = Date()
+    private var currentDate: Date = Date().dayStart
     
     private let emptyStateView: UIView = {
         let view = EmptyStateView()
@@ -155,7 +155,7 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
-        currentDate = sender.date
+        currentDate = sender.date.dayStart
         datePicker.removeFromSuperview()
         
         trackerStore.updateDate(currentDate)
@@ -207,7 +207,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.config(with: completionStatus.tracker,
                     numberOfCompletions: completionStatus.numberOfCompletions,
                     isCompleted: completionStatus.isCompleted,
-                    completionIsEnabled: currentDate <= Date())
+                    completionIsEnabled: currentDate <= Date().dayStart)
         cell.delegate = self
         return cell
     }
