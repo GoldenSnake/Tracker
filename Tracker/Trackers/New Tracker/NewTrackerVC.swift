@@ -555,6 +555,7 @@ extension NewTrackerVC: UICollectionViewDelegate {
            let previousCell = collectionView.cellForItem(at: previousIndexPath) as? SelectableCell {
             guard previousIndexPath != indexPath else { return }
             previousCell.deselect()
+            collectionView.deselectItem(at: previousIndexPath, animated: true)
         }
         if let cell = collectionView.cellForItem(at: indexPath) as? SelectableCell {
             selectedCells[indexPath.section] = indexPath

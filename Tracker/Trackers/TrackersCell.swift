@@ -183,7 +183,6 @@ final class TrackersCell: UICollectionViewCell {
     @objc
     private func completeButtonDidTap() {
         isCompleted.toggle()
-//        configureViewState()
         delegate?.trackerCellDidChangeCompletion(for: self, to: isCompleted)
     }
     

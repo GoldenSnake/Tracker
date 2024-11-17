@@ -1,14 +1,5 @@
 
-import UIKit
 import CoreData
-
-enum TrackerError: Error {
-    case decodingErrorInvalidId
-    case decodingErrorInvalidName
-    case decodingErrorInvalidColorHex
-    case decodingErrorInvalidEmoji
-    case decodingErrorInvalidDays
-}
 
 struct TrackerStoreUpdate {
     let insertedSections: [Int]
@@ -34,12 +25,9 @@ protocol TrackerStoreProtocol {
     var numberOfSections: Int { get }
     func numberOfItemsInSection(_ section: Int) -> Int
     func sectionName(for section: Int) -> String
-    //    var savedTrackers: [Tracker] { get }
     func addNewTracker(_ tracker: Tracker)
     func deleteTracker(at indexPath: IndexPath)
-    
     func completionStatus(for indexPath: IndexPath) -> TrackerCompletion
-    
     func updateDate(_ newDate: Date)
     func changeCompletion(for indexPath: IndexPath, to isCompleted: Bool)
 }
@@ -134,7 +122,6 @@ extension TrackerStore: TrackerStoreProtocol {
         return fetchedResultsController.sections?[section].name ?? ""
     }
     
-    
     var numberOfSections: Int {
         fetchedResultsController.sections?.count ?? 0
     }
@@ -142,14 +129,6 @@ extension TrackerStore: TrackerStoreProtocol {
     func numberOfItemsInSection(_ section: Int) -> Int {
         fetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
-    
-    //    var savedTrackers: [Tracker] {
-    //        guard
-    //            let objects = self.fetchedResultsController.fetchedObjects,
-    //            let saveTrackers = try? objects.map({ self.tracker(from: $0) })
-    //        else { return [] }
-    //        return saveTrackers
-    //    }
     
     func addNewTracker(_ tracker: Tracker) {
         let category = category()
@@ -161,12 +140,9 @@ extension TrackerStore: TrackerStoreProtocol {
         trackerCoreData.colorHex = uiColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.days = tracker.days?.toRawString() ?? ""
         trackerCoreData.emoji = tracker.emoji
-        do {
-            try context.save()
-            print("Save: \(tracker.name)")
-        } catch {
-            print("Error saving new tracker: \(error.localizedDescription)")
-        }
+        trackerCoreData.category = category
+        
+        CoreDataManager.shared.saveContext()
     }
     
     func deleteTracker(at indexPath: IndexPath) {
