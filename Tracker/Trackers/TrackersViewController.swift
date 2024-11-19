@@ -121,7 +121,6 @@ final class TrackersViewController: UIViewController {
     
     private func setupNavBarItemRight() {
         datePicker.datePickerMode = .date
-        datePicker.locale = Locale(identifier: "ru_RU")
         datePicker.preferredDatePickerStyle = .compact
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         
