@@ -29,8 +29,8 @@ final class TrackerCategoryHeader: UICollectionReusableView {
         ])
     }
     
-    func config(with category: TrackerCategory) {
-        categoryTitleLabel.text = category.name
+    func config(with category: String) {
+        categoryTitleLabel.text = category
     }
     
 }
