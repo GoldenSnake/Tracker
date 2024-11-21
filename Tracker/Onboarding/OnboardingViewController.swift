@@ -58,6 +58,8 @@ final class OnboardingViewController: UIPageViewController {
     }
     
     private func skipOnboarding() {
+        UserDefaults.standard.hasCompletedOnboarding = true
+        
         if let window = view.window {
             window.rootViewController = TabBarController()
         }

@@ -39,6 +39,7 @@
 		0167319F2CDAD8A7009E040A /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0167319E2CDAD8A7009E040A /* SectionHeader.swift */; };
 		019EAD292CEF6F2600EE9178 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019EAD282CEF6F2600EE9178 /* OnboardingViewController.swift */; };
 		019EAD2B2CEF77FF00EE9178 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019EAD2A2CEF77FF00EE9178 /* OnboardingPageViewController.swift */; };
+		019EAD2D2CEF865300EE9178 /* UserDefaultsOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019EAD2C2CEF865300EE9178 /* UserDefaultsOnboarding.swift */; };
 		01A840402CBD16C100F45ACC /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A8403F2CBD16C100F45ACC /* EmptyStateView.swift */; };
 		01C0F8FE2CEA328000020CA1 /* DateConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C0F8FD2CEA328000020CA1 /* DateConverter.swift */; };
 		01CB9C742CAF522B00BD647A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01CB9C732CAF522B00BD647A /* AppDelegate.swift */; };
@@ -80,6 +81,7 @@
 		0167319E2CDAD8A7009E040A /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
 		019EAD282CEF6F2600EE9178 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		019EAD2A2CEF77FF00EE9178 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
+		019EAD2C2CEF865300EE9178 /* UserDefaultsOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsOnboarding.swift; sourceTree = "<group>"; };
 		01A8403F2CBD16C100F45ACC /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
 		01C0F8FD2CEA328000020CA1 /* DateConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateConverter.swift; sourceTree = "<group>"; };
 		01CB9C702CAF522B00BD647A /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -187,6 +189,7 @@
 				013C22592CD18CDC0047EF9B /* AddSeparator.swift */,
 				013C22572CD189B10047EF9B /* ApplyCornerRadius.swift */,
 				0155AD682CE6666D00E3D259 /* UIColorMarshalling.swift */,
+				019EAD2C2CEF865300EE9178 /* UserDefaultsOnboarding.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -328,6 +331,7 @@
 				013C225F2CD18ECA0047EF9B /* LinkCell.swift in Sources */,
 				015A82372CBF227F00A6B822 /* TrackerCategory.swift in Sources */,
 				016731992CDA69AC009E040A /* ColorCell.swift in Sources */,
+				019EAD2D2CEF865300EE9178 /* UserDefaultsOnboarding.swift in Sources */,
 				013C22522CD15EB70047EF9B /* ActionButton.swift in Sources */,
 				019EAD2B2CEF77FF00EE9178 /* OnboardingPageViewController.swift in Sources */,
 				0155AD652CE665CB00E3D259 /* TrackerStore.swift in Sources */,
