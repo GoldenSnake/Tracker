@@ -48,7 +48,7 @@ final class TrackersViewController: UIViewController {
         setupCollectionVeiw()
         setupConstraints()
         setupNavigationBar()
-//        collectionView.isHidden = true
+        //        collectionView.isHidden = true
         
         configureViewState()
         
@@ -141,8 +141,10 @@ final class TrackersViewController: UIViewController {
     
     @objc
     private func addNewTracker(_ notification: Notification) {
-        guard let tracker = notification.object as? Tracker else { return }
-        trackerStore.addNewTracker(tracker)
+        guard let category = notification.object as? TrackerCategory,
+              let tracker = category.trackers.first else {return}
+        
+        trackerStore.addNewTracker(tracker, to: category)
     }
     
     @objc private func addTrackerButtonDidTap() {

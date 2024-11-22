@@ -3,27 +3,34 @@ import UIKit
 extension UITableView {
     
     func applyCornerRadius(to cell: UITableViewCell, at indexPath: IndexPath) {
-        let cornerRadius: CGFloat = 16.0
-        // Проверяем количество строк в секции
-        if self.numberOfRows(inSection: indexPath.section) == 1 {
-            // Единственная ячейка в секции
-            cell.layer.cornerRadius = cornerRadius
+        
+        cell.layer.cornerRadius = 0
+        cell.layer.masksToBounds = false
+
+        let numberOfRows = self.numberOfRows(inSection: indexPath.section)
+        let isFirstRow = indexPath.row == 0
+        let isLastRow = indexPath.row == numberOfRows - 1
+    
+        if isFirstRow || isLastRow {
+            cell.layer.cornerRadius = 16
             cell.layer.masksToBounds = true
+            
+            var corners: CACornerMask = []
+            if isFirstRow {
+                corners.insert(.layerMinXMinYCorner)
+                corners.insert(.layerMaxXMinYCorner)
+            }
+            if isLastRow {
+                corners.insert(.layerMinXMaxYCorner)
+                corners.insert(.layerMaxXMaxYCorner)
+            }
+            cell.layer.maskedCorners = corners
         } else {
-            // Если это первая ячейка
-            if indexPath.row == 0 {
-                cell.layer.cornerRadius = cornerRadius
-                cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-                cell.layer.masksToBounds = true
-            }
-            // Если это последняя ячейка
-            if indexPath.row == self.numberOfRows(inSection: indexPath.section) - 1 {
-                cell.layer.cornerRadius = cornerRadius
-                cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-                cell.layer.masksToBounds = true
-            }
+            cell.layer.maskedCorners = []
         }
+        
     }
+    
 }
 
 
