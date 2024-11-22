@@ -15,6 +15,8 @@ final class TrackersViewController: UIViewController {
     
     private let emptyStateView: UIView = {
         let view = EmptyStateView()
+        let text = "Что будем отслеживать?"
+        view.config(with: text)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

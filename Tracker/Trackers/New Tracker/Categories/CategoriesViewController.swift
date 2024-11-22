@@ -33,6 +33,14 @@ final class CategoriesViewController: UIViewController {
         return button
     }()
     
+    private lazy var emptyView: UIView = {
+        let text = "Привычки и события можно \n объединить по смыслу"
+        let emptyView = EmptyStateView()
+        emptyView.config(with: text)
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
+        return emptyView
+    }()
+    
     // MARK: - View Life Cycle
     
     init(viewModel: CategoriesViewModelProtocol, currentCategory: String) {
@@ -51,13 +59,20 @@ final class CategoriesViewController: UIViewController {
         
         view.addSubview(tableView)
         view.addSubview(addCategoryButton)
+        view.addSubview(emptyView)
         
         setupNav()
         setupConstraints()
         setupBindings()
+        configureViewState()
     }
     
     // MARK: - Private Methods
+    
+    private func configureViewState() {
+        tableView.isHidden = viewModel.categoriesIsEmpty
+        emptyView.isHidden = !viewModel.categoriesIsEmpty
+    }
     
     private func setupNav() {
         title = "Категория"
@@ -70,6 +85,10 @@ final class CategoriesViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
+            emptyView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            emptyView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            emptyView.bottomAnchor.constraint(equalTo: addCategoryButton.topAnchor, constant: -16),
+            
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
