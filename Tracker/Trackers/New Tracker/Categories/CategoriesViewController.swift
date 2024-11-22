@@ -105,6 +105,7 @@ final class CategoriesViewController: UIViewController {
         viewModel.onDataChanged = { [weak self] in
             guard let self else { return }
             tableView.reloadData()
+            configureViewState()
         }
     }
     
