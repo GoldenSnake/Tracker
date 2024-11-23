@@ -17,7 +17,6 @@ final class NewCategoryViewController: UIViewController {
         table.layer.cornerRadius = 16
         table.layer.masksToBounds = true
 
-        
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
@@ -64,8 +63,6 @@ final class NewCategoryViewController: UIViewController {
             NSAttributedString.Key.foregroundColor: UIColor.ypBlack
         ]
     }
-    
-    
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([

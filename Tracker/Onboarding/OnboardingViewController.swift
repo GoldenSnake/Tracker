@@ -3,7 +3,7 @@ import UIKit
 
 final class OnboardingViewController: UIPageViewController {
     
-    lazy var pages: [UIViewController] = {
+    private lazy var pages: [UIViewController] = {
         
         let onCompletion: () -> Void = { [weak self] in
             self?.skipOnboarding()
@@ -22,7 +22,7 @@ final class OnboardingViewController: UIPageViewController {
         return [first, second]
     }()
     
-    lazy var pageControl: UIPageControl = {
+    private lazy var pageControl: UIPageControl = {
         let pageControl = UIPageControl()
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
@@ -100,7 +100,6 @@ extension OnboardingViewController: UIPageViewControllerDataSource {
         
         return pages[nextIndex]
     }
-    
 }
 
 // MARK: - UIPageViewControllerDelegate

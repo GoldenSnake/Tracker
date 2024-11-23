@@ -2,7 +2,7 @@
 
 import UIKit
 
-class OnboardingPageViewController: UIViewController {
+final class OnboardingPageViewController: UIViewController {
     
     private lazy var backgroundImage: UIImageView = {
         let imageView = UIImageView()

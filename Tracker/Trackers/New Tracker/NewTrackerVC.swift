@@ -141,7 +141,6 @@ final class NewTrackerVC: UIViewController {
     
     // MARK: - Private Methods
     
-    
     private func setupCancelButton() {
         cancelButton.setTitle("Отменить", for: .normal)
         cancelButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
