@@ -17,6 +17,7 @@ protocol TrackerCategoryStoreProtocol {
     var numberOfSections: Int { get }
     func numberOfItemsInSection(_ section: Int) -> Int
     func addCategory(_ name: String)
+    func categoryName(at indexPath: IndexPath) -> String
 }
 
 final class TrackerCategoryStore: NSObject {
@@ -43,7 +44,7 @@ final class TrackerCategoryStore: NSObject {
         return fetchedResultsController
     }()
     
-    init(delegate: TrackerCategoryStoreDelegate) {
+    init(delegate: TrackerCategoryStoreDelegate?) {
         self.delegate = delegate
     }
 }
@@ -62,6 +63,11 @@ extension TrackerCategoryStore: TrackerCategoryStoreProtocol {
         let category = TrackerCategoryCoreData(context: context)
         category.name = name
         dataController.saveContext()
+    }
+    
+    func categoryName(at indexPath: IndexPath) -> String {
+        let categoryCoreData = fetchedResultsController.object(at: indexPath)
+        return categoryCoreData.name ?? ""
     }
 }
 

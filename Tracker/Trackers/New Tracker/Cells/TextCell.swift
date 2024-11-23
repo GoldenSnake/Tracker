@@ -2,7 +2,7 @@
 import UIKit
 
 final class TextCell: UITableViewCell {
-    var onTextChange: ((String) -> Void)?
+    private var onTextChange: ((String) -> Void)?
     
     private var textField = UITextField()
     private let maxCharacterLimit = 38
@@ -23,7 +23,6 @@ final class TextCell: UITableViewCell {
     private func setupTextField(){
         contentView.addSubview(textField)
         
-        textField.placeholder = "Введите название трекера"
         textField.font = .systemFont(ofSize: 17, weight: .regular)
         textField.clearButtonMode = .whileEditing
         textField.borderStyle = .none
@@ -42,6 +41,11 @@ final class TextCell: UITableViewCell {
             textField.topAnchor.constraint(equalTo: contentView.topAnchor),
             textField.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
+    }
+    
+    func configure(placeholder: String, onTextChange: @escaping (String) -> Void) {
+        textField.placeholder = placeholder
+        self.onTextChange = onTextChange
     }
     
     @objc private func textFieldDidChange(_ textField: UITextField) {

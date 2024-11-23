@@ -25,7 +25,7 @@ protocol TrackerStoreProtocol {
     var numberOfSections: Int { get }
     func numberOfItemsInSection(_ section: Int) -> Int
     func sectionName(for section: Int) -> String
-    func addNewTracker(_ tracker: Tracker)
+    func addNewTracker(_ tracker: Tracker, to category: TrackerCategory)
     func deleteTracker(at indexPath: IndexPath)
     func completionStatus(for indexPath: IndexPath) -> TrackerCompletion
     func updateDate(_ newDate: Date)
@@ -92,15 +92,16 @@ final class TrackerStore: NSObject {
     }
     
     
-    private func category() -> TrackerCategoryCoreData {
+    private func fetchOrCreateCategory(_ name: String) -> TrackerCategoryCoreData {
         let request = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
+        request.predicate = NSPredicate(format: "name == %@", name)
         let result = try? context.fetch(request)
         if let result,
            !result.isEmpty {
             return result[0]
         } else {
             let category = TrackerCategoryCoreData(context: context)
-            category.name = "Общая категория"
+            category.name = name
             CoreDataManager.shared.saveContext()
             return category
         }
@@ -129,8 +130,8 @@ extension TrackerStore: TrackerStoreProtocol {
         fetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
     
-    func addNewTracker(_ tracker: Tracker) {
-        let category = category()
+    func addNewTracker(_ tracker: Tracker, to category: TrackerCategory) {
+        let categoryCoreData = fetchOrCreateCategory(category.name)
         
         let trackerCoreData = TrackerCoreData(context: context)
         
@@ -139,7 +140,7 @@ extension TrackerStore: TrackerStoreProtocol {
         trackerCoreData.colorHex = UIColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.days = tracker.days?.toRawString() ?? ""
         trackerCoreData.emoji = tracker.emoji
-        trackerCoreData.category = category
+        trackerCoreData.category = categoryCoreData
         
         CoreDataManager.shared.saveContext()
     }

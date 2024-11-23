@@ -19,6 +19,7 @@ final class AddTrackerViewController: UIViewController {
         setupRegularTrackerButton()
         setupirregularTrackerButton()
         setupConstraints()
+        setupNav()
     }
     
     // MARK: - Private Methods
