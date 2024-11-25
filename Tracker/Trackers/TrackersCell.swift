@@ -9,16 +9,15 @@ final class TrackersCell: UICollectionViewCell {
     
     // MARK: - Public Properties
     weak var delegate: TrackerCellDelegate?
+    let cardView = UIView()
     
-    
-    // MARK: - private
+    // MARK: - private Properties
     
     private let emojiLabel = UILabel()
     private let titleLabel = UILabel()
     private let counterLabel = UILabel()
     private let completeButton = UIButton()
     
-    private let cardView = UIView()
     private let circleView = UIView()
     
     private var isCompleted = false

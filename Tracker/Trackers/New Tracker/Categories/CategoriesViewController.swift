@@ -39,7 +39,7 @@ final class CategoriesViewController: UIViewController {
     
     private lazy var emptyView: UIView = {
         let text = NSLocalizedString(
-            "categories.stubView.caption",
+            "categories.emptyView.caption",
             comment: "Caption for the stub view explaining grouping habits and events"
         )
         let emptyView = EmptyStateView()

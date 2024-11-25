@@ -34,3 +34,7 @@ category = "Catégorie";
 schedule = "Horaire";
 schedule.isEveryDay = "Chaque jour";
 
+contextMenu.pin.title = "Fixer";
+contextMenu.unpin.title = "Détacher";
+contextMenu.edit.title = "Éditer";
+contextMenu.delete.title = "Supprimer";
