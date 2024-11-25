@@ -15,7 +15,8 @@ final class TrackersViewController: UIViewController {
     
     private let emptyStateView: UIView = {
         let view = EmptyStateView()
-        let text = "Что будем отслеживать?"
+        let text = NSLocalizedString("trackers.emptyView.caption",
+                                     comment: "Caption for the stub view when there are no items to track")
         view.config(with: text)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -108,7 +109,7 @@ final class TrackersViewController: UIViewController {
         setupSearchController()
         
         navigationController?.navigationBar.prefersLargeTitles = true
-        title = "Трекеры"
+        title = NSLocalizedString("trackers.tabBarItem.title", comment: "Title for the Trackers tab")
     }
     
     private func setupNavBarItemLeft() {
@@ -134,7 +135,10 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupSearchController() {
-        searchController.searchBar.placeholder = "Поиск"
+        searchController.searchBar.placeholder = NSLocalizedString(
+            "searchController.searchBar.placeholder",
+            comment: "Placeholder for the search bar"
+        )
         
         navigationItem.searchController = searchController
     }
@@ -150,7 +154,6 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc private func addTrackerButtonDidTap() {
-        print("Add Tracker Button Tap")
         let viewController = AddTrackerViewController()
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.modalPresentationStyle = .formSheet
@@ -164,12 +167,6 @@ final class TrackersViewController: UIViewController {
         trackerStore.updateDate(currentDate)
         collectionView.reloadData()
         configureViewState()
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy"
-        let formattedDate = dateFormatter.string(from: currentDate)
-        let weekday = Weekday(date: currentDate)
-        print("Выбранная дата: \(formattedDate), \(weekday.name)")
     }
 }
 

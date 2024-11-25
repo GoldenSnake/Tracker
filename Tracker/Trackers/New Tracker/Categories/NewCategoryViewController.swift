@@ -23,7 +23,8 @@ final class NewCategoryViewController: UIViewController {
     
     private lazy var createButton: ActionButton = {
         let button = ActionButton()
-        button.setTitle("Готово", for: .normal)
+        let title = NSLocalizedString("doneButton.title", comment: "Title for the done button")
+        button.setTitle(title, for: .normal)
         button.addTarget(self, action: #selector(createButtonDidTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -56,7 +57,10 @@ final class NewCategoryViewController: UIViewController {
     // MARK: - Private Methods
     
     private func setupNav() {
-        title = "Новая категория"
+        title = NSLocalizedString(
+                   "newCategoryView.title",
+                   comment: "Title for the new category view"
+               )
         navigationItem.hidesBackButton = true
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .medium),
@@ -120,7 +124,11 @@ extension NewCategoryViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         tableView.applyCornerRadius(to: cell, at: indexPath)
-        cell.configure(placeholder: "Введите название категории") { [weak self] text in
+        let placeholder = NSLocalizedString(
+                    "newCategoryView.name.placeholder",
+                    comment: "Placeholder for the category name input"
+                )
+        cell.configure(placeholder: placeholder) { [weak self] text in
             self?.name = text
         }
         return cell

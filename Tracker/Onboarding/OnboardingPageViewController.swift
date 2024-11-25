@@ -25,7 +25,8 @@ final class OnboardingPageViewController: UIViewController {
     private lazy var skipButton: ActionButton = {
     let button = ActionButton(type: .system)
         button.addTarget(self, action: #selector(skipButtonDidTap), for: .touchUpInside)
-        button.setTitle("Вот это технологии!", for: .normal)
+        let title = NSLocalizedString("onboarding.finishButton.title", comment: "Title for the finish button")
+        button.setTitle(title, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()

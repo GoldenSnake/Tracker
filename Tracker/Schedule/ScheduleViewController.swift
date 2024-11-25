@@ -46,7 +46,7 @@ final class ScheduleViewController: UIViewController {
     // MARK: - Private Methods
     
     private func setupNav() {
-        title = "Расписание"
+        title =  NSLocalizedString("schedule", comment: "Title for the schedule view")
         navigationItem.hidesBackButton = true
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .medium),
@@ -56,7 +56,8 @@ final class ScheduleViewController: UIViewController {
     
     private func setupDoneButton() {
         view.addSubview(doneButton)
-        doneButton.setTitle("Готово", for: .normal)
+        let title = NSLocalizedString("doneButton.title", comment: "Title for the done button")
+        doneButton.setTitle(title, for: .normal)
         doneButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         

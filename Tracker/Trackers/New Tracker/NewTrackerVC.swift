@@ -142,7 +142,8 @@ final class NewTrackerVC: UIViewController {
     // MARK: - Private Methods
     
     private func setupCancelButton() {
-        cancelButton.setTitle("Отменить", for: .normal)
+        let title = NSLocalizedString("cancelButton.title", comment: "Title for the cancel button")
+        cancelButton.setTitle(title, for: .normal)
         cancelButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         cancelButton.setTitleColor(.ypRed, for: .normal)
         cancelButton.backgroundColor = .ypWhite
@@ -159,7 +160,8 @@ final class NewTrackerVC: UIViewController {
     }
     
     private func setupCreateButton() {
-        createButton.setTitle("Сохранить", for: .normal)
+        let title = NSLocalizedString("createButton.title", comment: "Title for the create button")
+        createButton.setTitle(title, for: .normal)
         createButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         
@@ -172,7 +174,7 @@ final class NewTrackerVC: UIViewController {
     
     private func configureViewState() {
         let daysAreValid = days?.isEmpty == false || trackerType == .irregular
-       
+        
         createButton.isEnabled =
         !name.isEmpty &&
         !categoryName.isEmpty &&
@@ -203,9 +205,9 @@ final class NewTrackerVC: UIViewController {
         
         switch trackerType {
         case .regular:
-            title = "Новая Привычка"
+            title = NSLocalizedString("newTrackerView.title.regular", comment: "Title for creating a new habit")
         case .irregular:
-            title = "Нерегулярное событие"
+            title = NSLocalizedString("newTrackerView.title.irregular", comment: "Title for creating a new irregular event")
         }
     }
     
@@ -356,7 +358,11 @@ extension NewTrackerVC: UITableViewDataSource, UITableViewDelegate {
             return UITableViewCell()
         }
         tableView.applyCornerRadius(to: cell, at: indexPath)
-        cell.configure(placeholder: "Введите название трекера") { [weak self] text in
+        let placeholder = NSLocalizedString(
+            "newTrackerView.name.placeholder",
+            comment: "Placeholder for the tracker name input"
+        )
+        cell.configure(placeholder: placeholder) { [weak self] text in
             self?.name = text
             self?.configureViewState()
         }
@@ -380,15 +386,17 @@ extension NewTrackerVC: UITableViewDataSource, UITableViewDelegate {
     private func getTitleAndCaptionForLinkCell(at row: Int) -> (String, String) {
         switch row {
         case 0:
-            return ("Категория", categoryName)
+            let title = NSLocalizedString("category", comment: "Title for the category cell")
+            return (title, categoryName)
         case 1:
             let caption: String
             if let days, days.count == Weekday.allCases.count {
-                caption = "Каждый день"
+                caption = NSLocalizedString("schedule.isEveryDay", comment: "Caption for every day in the schedule")
             } else {
                 caption = days?.map { $0.shortName }.joined(separator: ", ") ?? ""
             }
-            return ("Расписание", caption)
+            let title = NSLocalizedString("schedule", comment: "Title for the schedule cell")
+            return (title, caption)
         default:
             return ("", "")
         }
@@ -551,7 +559,10 @@ extension NewTrackerVC: UICollectionViewDelegate {
             guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerID", for: indexPath) as? SectionHeader else {
                 return UICollectionReusableView()
             }
-            view.config(with: indexPath.section == 0 ? "Emoji" : "Цвет")
+            let sectionTitle = indexPath.section == 0
+            ? NSLocalizedString("newTrackerView.emojiGroup.title", comment: "Title for the Emoji section")
+            : NSLocalizedString("newTrackerView.colorGroup.title", comment: "Title for the Color section")
+            view.config(with: sectionTitle)
             return view
         } else if kind == UICollectionView.elementKindSectionFooter {
             let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footerID", for: indexPath)
@@ -590,7 +601,7 @@ extension NewTrackerVC: CategorySelectionDelegate {
         categoryName = name
         tableView.reloadData()
         configureViewState()
-
+        
         navigationController?.popViewController(animated: true)
     }
 }

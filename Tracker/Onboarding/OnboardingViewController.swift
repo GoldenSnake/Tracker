@@ -10,12 +10,13 @@ final class OnboardingViewController: UIPageViewController {
         }
         
         let first = OnboardingPageViewController()
-        first.config(text: "Отслеживайте только то, что хотите",
+        let firstText = NSLocalizedString("onboarding.description.one", comment: "Onboarding description (first screen)")
+        first.config(text: firstText,
                      background: UIImage(named: "Background1") ?? UIImage(),
                      onCompletion: onCompletion)
-        
+        let secondText = NSLocalizedString("onboarding.description.two", comment: "Onboarding description (second screen)")
         let second = OnboardingPageViewController()
-        second.config(text: "Даже если это не литры воды и йога",
+        second.config(text: secondText,
                       background: UIImage(named: "Background2") ?? UIImage(),
                       onCompletion: onCompletion)
         

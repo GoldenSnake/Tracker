@@ -98,4 +98,10 @@ iOSInjectionProject/
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+
+Tracker.xcscheme
+
+
 # End of https://www.toptal.com/developers/gitignore/api/swift,xcode
+Tracker.xcscheme
+
