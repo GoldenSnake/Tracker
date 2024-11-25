@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		01024FB72CF4CBE00087034C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 01024FB52CF4CBE00087034C /* Localizable.strings */; };
+		01024FBC2CF52E730087034C /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 01024FBA2CF52E730087034C /* Localizable.stringsdict */; };
 		013C22442CC9D0E40047EF9B /* GeometricParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22432CC9D0E40047EF9B /* GeometricParams.swift */; };
 		013C22462CC9D5730047EF9B /* TrackersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22452CC9D5720047EF9B /* TrackersCell.swift */; };
 		013C22482CD056390047EF9B /* TrackerCategoryHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22472CD056390047EF9B /* TrackerCategoryHeader.swift */; };
@@ -54,9 +55,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		01024FB62CF4CBE00087034C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		01024FB82CF4CC7C0087034C /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
-		01024FB92CF4CCB70087034C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		01024FBB2CF52E730087034C /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		01024FC02CF5308C0087034C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		01024FC12CF5308C0087034C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = fr; path = fr.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		01024FC22CF530CD0087034C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		01024FC32CF530CD0087034C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		013C22432CC9D0E40047EF9B /* GeometricParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometricParams.swift; sourceTree = "<group>"; };
 		013C22452CC9D5720047EF9B /* TrackersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCell.swift; sourceTree = "<group>"; };
 		013C22472CD056390047EF9B /* TrackerCategoryHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryHeader.swift; sourceTree = "<group>"; };
@@ -120,6 +124,7 @@
 			children = (
 				01CB9C7C2CAF522C00BD647A /* Assets.xcassets */,
 				01024FB52CF4CBE00087034C /* Localizable.strings */,
+				01024FBA2CF52E730087034C /* Localizable.stringsdict */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -319,10 +324,10 @@
 			developmentRegion = ru;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
 				ru,
 				fr,
+				en,
 			);
 			mainGroup = 01CB9C672CAF522B00BD647A;
 			productRefGroup = 01CB9C712CAF522B00BD647A /* Products */;
@@ -340,6 +345,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				01CB9C7D2CAF522C00BD647A /* Assets.xcassets in Resources */,
+				01024FBC2CF52E730087034C /* Localizable.stringsdict in Resources */,
 				01024FB72CF4CBE00087034C /* Localizable.strings in Resources */,
 				01CB9C802CAF522C00BD647A /* Base in Resources */,
 			);
@@ -402,11 +408,21 @@
 		01024FB52CF4CBE00087034C /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				01024FB62CF4CBE00087034C /* en */,
 				01024FB82CF4CC7C0087034C /* ru */,
-				01024FB92CF4CCB70087034C /* fr */,
+				01024FC02CF5308C0087034C /* fr */,
+				01024FC22CF530CD0087034C /* en */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		01024FBA2CF52E730087034C /* Localizable.stringsdict */ = {
+			isa = PBXVariantGroup;
+			children = (
+				01024FBB2CF52E730087034C /* ru */,
+				01024FC12CF5308C0087034C /* fr */,
+				01024FC32CF530CD0087034C /* en */,
+			);
+			name = Localizable.stringsdict;
 			sourceTree = "<group>";
 		};
 		01CB9C7E2CAF522C00BD647A /* LaunchScreen.storyboard */ = {

@@ -64,21 +64,13 @@ final class TrackersCell: UICollectionViewCell {
         completeButton.setImage(UIImage(systemName: isCompleted ? "checkmark" : "plus"), for: .normal)
         completeButton.backgroundColor = color.withAlphaComponent(isCompleted ? 0.3 : 1)
         
-        let lastDigit = numberOfCompletions % 10
-        let lastTwoDigits = numberOfCompletions % 100
-        
-        if lastTwoDigits >= 11 && lastTwoDigits <= 14 {
-            counterLabel.text = "\(numberOfCompletions) дней"
-        } else {
-            switch lastDigit {
-            case 1:
-                counterLabel.text = "\(numberOfCompletions) день"
-            case 2, 3, 4:
-                counterLabel.text = "\(numberOfCompletions) дня"
-            default:
-                counterLabel.text = "\(numberOfCompletions) дней"
-            }
-        }
+        counterLabel.text = String(
+            format: NSLocalizedString(
+                "numberOfDays",
+                comment: "Number of days"
+            ),
+            numberOfCompletions
+        )
     }
     
     private func setupCircleVeiw() {
