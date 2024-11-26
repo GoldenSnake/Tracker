@@ -9,10 +9,11 @@ final class TrackersViewController: UIViewController {
     // MARK: - Private Properties
     
     private lazy var trackerStore: TrackerStoreProtocol = {
-        TrackerStore(delegate: self, for: currentDate)
+        TrackerStore(delegate: self, date: currentDate, filter: currentFilter)
     }()
     
     private var currentDate: Date = Date().dayStart
+    private var currentFilter: FilterOptions = .all
     
     private let emptyStateView: UIView = {
         let view = EmptyStateView()
@@ -21,6 +22,19 @@ final class TrackersViewController: UIViewController {
         view.config(with: text)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }()
+    
+    private lazy var filterButton: UIButton = {
+        let button = UIButton()
+        let title = NSLocalizedString("filter.title", comment: "Filter")
+        button.setTitle(title, for: .normal)
+        button.backgroundColor = .ypBlue
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .regular)
+        button.layer.cornerRadius = 16
+        button.layer.masksToBounds = true
+        button.addTarget(self, action: #selector(filterButtonDidTap), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     //collectionView
@@ -46,13 +60,13 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
-        
         view.addSubview(emptyStateView)
         configureViewState()
         setupCollectionVeiw()
+        view.addSubview(filterButton)
         setupConstraints()
         setupNavigationBar()
-        //        collectionView.isHidden = true
+//                collectionView.isHidden = true
         
         configureViewState()
         
@@ -87,7 +101,12 @@ final class TrackersViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            
+            filterButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            filterButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            filterButton.widthAnchor.constraint(equalToConstant: 114),
+            filterButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         
         //emptyStateView
@@ -204,10 +223,38 @@ final class TrackersViewController: UIViewController {
         currentDate = sender.date.dayStart
         datePicker.removeFromSuperview()
         
-        trackerStore.updateDate(currentDate)
+        if currentFilter == .today && currentDate != Date().dayStart {
+                  currentFilter = .all
+              }
+
+              trackerStore.applyFilter(currentFilter, on: currentDate)
         collectionView.reloadData()
         configureViewState()
     }
+    
+    @objc private func filterButtonDidTap() {
+           let viewController = FilterViewController()
+           viewController.currentFilter = currentFilter
+           viewController.onFilterSelected = { [weak self] filter in
+               guard let self else { return }
+
+               self.currentFilter = filter
+
+               if filter == .today {
+                   self.currentDate = Date().dayStart
+                   datePicker.date = Date().dayStart
+                   
+               }
+
+               self.trackerStore.applyFilter(currentFilter, on: currentDate)
+               self.collectionView.reloadData()
+               self.configureViewState()
+           }
+
+           let navigationController = UINavigationController(rootViewController: viewController)
+           navigationController.modalPresentationStyle = .formSheet
+           present(navigationController, animated: true)
+       }
 }
 
 // MARK: - UICollectionViewDelegate

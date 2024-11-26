@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		01024FB72CF4CBE00087034C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 01024FB52CF4CBE00087034C /* Localizable.strings */; };
 		01024FBC2CF52E730087034C /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 01024FBA2CF52E730087034C /* Localizable.stringsdict */; };
+		01024FC62CF55A380087034C /* FilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01024FC52CF55A380087034C /* FilterCell.swift */; };
+		01024FC82CF55A620087034C /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01024FC72CF55A620087034C /* FilterViewController.swift */; };
+		01024FCA2CF55AC30087034C /* FilerOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01024FC92CF55AC30087034C /* FilerOptions.swift */; };
 		013C22442CC9D0E40047EF9B /* GeometricParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22432CC9D0E40047EF9B /* GeometricParams.swift */; };
 		013C22462CC9D5730047EF9B /* TrackersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22452CC9D5720047EF9B /* TrackersCell.swift */; };
 		013C22482CD056390047EF9B /* TrackerCategoryHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C22472CD056390047EF9B /* TrackerCategoryHeader.swift */; };
@@ -61,6 +64,9 @@
 		01024FC12CF5308C0087034C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = fr; path = fr.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		01024FC22CF530CD0087034C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		01024FC32CF530CD0087034C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		01024FC52CF55A380087034C /* FilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCell.swift; sourceTree = "<group>"; };
+		01024FC72CF55A620087034C /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
+		01024FC92CF55AC30087034C /* FilerOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilerOptions.swift; sourceTree = "<group>"; };
 		013C22432CC9D0E40047EF9B /* GeometricParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometricParams.swift; sourceTree = "<group>"; };
 		013C22452CC9D5720047EF9B /* TrackersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCell.swift; sourceTree = "<group>"; };
 		013C22472CD056390047EF9B /* TrackerCategoryHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryHeader.swift; sourceTree = "<group>"; };
@@ -129,6 +135,16 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		01024FC42CF55A1A0087034C /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				01024FC52CF55A380087034C /* FilterCell.swift */,
+				01024FC72CF55A620087034C /* FilterViewController.swift */,
+				01024FC92CF55AC30087034C /* FilerOptions.swift */,
+			);
+			path = Filter;
+			sourceTree = "<group>";
+		};
 		013C224B2CD0FF0A0047EF9B /* New Tracker */ = {
 			isa = PBXGroup;
 			children = (
@@ -184,6 +200,7 @@
 		014C73302CAF668A007DC80C /* Trackers */ = {
 			isa = PBXGroup;
 			children = (
+				01024FC42CF55A1A0087034C /* Filter */,
 				013C224B2CD0FF0A0047EF9B /* New Tracker */,
 				015A82322CBF223E00A6B822 /* Models */,
 				014C73312CAF66F2007DC80C /* TrackersViewController.swift */,
@@ -365,6 +382,8 @@
 				0155AD692CE6666D00E3D259 /* UIColorMarshalling.swift in Sources */,
 				013C22582CD189B10047EF9B /* ApplyCornerRadius.swift in Sources */,
 				013C224A2CD05FC90047EF9B /* AddTrackerViewController.swift in Sources */,
+				01024FC62CF55A380087034C /* FilterCell.swift in Sources */,
+				01024FC82CF55A620087034C /* FilterViewController.swift in Sources */,
 				0155AD632CE665B800E3D259 /* TrackerCategoryStore.swift in Sources */,
 				013C22502CD141C10047EF9B /* ScheduleViewController.swift in Sources */,
 				0144C5332CDD05DE00C97E72 /* Model.xcdatamodeld in Sources */,
@@ -375,6 +394,7 @@
 				015A82372CBF227F00A6B822 /* TrackerCategory.swift in Sources */,
 				016731992CDA69AC009E040A /* ColorCell.swift in Sources */,
 				019EAD2D2CEF865300EE9178 /* UserDefaultsOnboarding.swift in Sources */,
+				01024FCA2CF55AC30087034C /* FilerOptions.swift in Sources */,
 				013C22522CD15EB70047EF9B /* ActionButton.swift in Sources */,
 				019EAD2B2CEF77FF00EE9178 /* OnboardingPageViewController.swift in Sources */,
 				019EAD562CF004C900EE9178 /* CategoryCell.swift in Sources */,
