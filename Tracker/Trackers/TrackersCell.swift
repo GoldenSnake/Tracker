@@ -10,6 +10,7 @@ final class TrackersCell: UICollectionViewCell {
     // MARK: - Public Properties
     weak var delegate: TrackerCellDelegate?
     let cardView = UIView()
+    var isPinned: Bool = false
     
     // MARK: - private Properties
     
@@ -23,6 +24,14 @@ final class TrackersCell: UICollectionViewCell {
     private var isCompleted = false
     private var numberOfCompletions = 0
     private var color = UIColor()
+    
+    private let pinImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "pin.fill")
+        imageView.tintColor = .ypWhite
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
     
     // MARK: - init
     
@@ -43,10 +52,11 @@ final class TrackersCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func config(with tracker: Tracker, numberOfCompletions: Int, isCompleted: Bool, completionIsEnabled: Bool) {
+    func config(with tracker: Tracker, numberOfCompletions: Int, isCompleted: Bool, completionIsEnabled: Bool, isPinned: Bool) {
         self.isCompleted = isCompleted
         self.numberOfCompletions = numberOfCompletions
         self.color = tracker.color
+        self.isPinned = isPinned
         
         cardView.backgroundColor = tracker.color
         completeButton.isEnabled = completionIsEnabled
@@ -70,10 +80,11 @@ final class TrackersCell: UICollectionViewCell {
             ),
             numberOfCompletions
         )
+        
+        pinImage.isHidden = !isPinned
     }
     
     private func setupCircleVeiw() {
-        
         circleView.backgroundColor = .ypWhite.withAlphaComponent(0.3)
         circleView.layer.cornerRadius = 12
         circleView.layer.masksToBounds = true
@@ -92,6 +103,7 @@ final class TrackersCell: UICollectionViewCell {
         cardView.addSubview(circleView)
         cardView.addSubview(titleLabel)
         cardView.addSubview(emojiLabel)
+        cardView.addSubview(pinImage)
     }
     
     // Настройка emojiLabel
@@ -166,7 +178,12 @@ final class TrackersCell: UICollectionViewCell {
             counterLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             counterLabel.trailingAnchor.constraint(equalTo: completeButton.leadingAnchor, constant: -8),
             counterLabel.topAnchor.constraint(equalTo: cardView.bottomAnchor, constant: 16),
-            counterLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -24)
+            counterLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -24),
+            
+            pinImage.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -10),
+            pinImage.centerYAnchor.constraint(equalTo: circleView.centerYAnchor),
+            pinImage.widthAnchor.constraint(equalToConstant: 12),
+            pinImage.heightAnchor.constraint(equalToConstant: 12)
         ])
     }
     

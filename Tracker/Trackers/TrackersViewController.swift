@@ -185,66 +185,80 @@ extension TrackersViewController: UICollectionViewDelegate {
     // контекстное меню
     
     func collectionView(_ collectionView: UICollectionView,
-                            contextMenuConfigurationForItemsAt indexPaths: [IndexPath],
-                            point: CGPoint) -> UIContextMenuConfiguration? {
-            guard indexPaths.count > 0 else { return nil }
-            let indexPath = indexPaths[0]
-
-            guard let cell = collectionView.cellForItem(at: indexPath) as? TrackersCell,
-                  cell.cardView.frame.contains(cell.convert(point, from: collectionView)) else { return nil }
-
-            return UIContextMenuConfiguration(identifier: indexPath as NSCopying, actionProvider: { actions in
-                let pinTitle = NSLocalizedString("contextMenu.pin.title", comment: "Pin item")
-                let pinAction = UIAction(title: pinTitle) { action in
-
-                }
-
-                let unpinTitle = NSLocalizedString("contextMenu.unpin.title", comment: "Unpin item")
-                let unpinAction = UIAction(title: unpinTitle) { action in
-
-                }
-
-                let editTitle = NSLocalizedString("contextMenu.edit.title", comment: "Edit item")
-                let editAction = UIAction(title: editTitle) { action in
-
-                }
-
-                let deleteTitle = NSLocalizedString("contextMenu.delete.title", comment: "Delete item")
-                let deleteAction = UIAction(title: deleteTitle, attributes: .destructive) { action in
-
-                }
-
-                return UIMenu(children: [pinAction, unpinAction, editAction, deleteAction])
-            })
-        }
-
-        func collectionView(_ collectionView: UICollectionView,
-                            contextMenuConfiguration configuration: UIContextMenuConfiguration,
-                            highlightPreviewForItemAt indexPath: IndexPath) -> UITargetedPreview? {
-            guard let indexPath = configuration.identifier as? IndexPath,
-                  let cell = collectionView.cellForItem(at: indexPath) as? TrackersCell else { return nil }
-
-            let parameters = UIPreviewParameters()
-            parameters.backgroundColor = .clear
-
-            let targetedPreview = UITargetedPreview(view: cell.cardView, parameters: parameters)
-            return targetedPreview
-        }
-
-        func collectionView(_ collectionView: UICollectionView,
-                            contextMenuConfiguration configuration: UIContextMenuConfiguration,
-                            dismissalPreviewForItemAt indexPath: IndexPath) -> UITargetedPreview? {
-            guard let indexPath = configuration.identifier as? IndexPath,
-                  let cell = collectionView.cellForItem(at: indexPath) as? TrackersCell else {
-                return nil
+                        contextMenuConfigurationForItemsAt indexPaths: [IndexPath],
+                        point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let indexPath = indexPaths.first else { return nil }
+        
+        guard let cell = collectionView.cellForItem(at: indexPath) as? TrackersCell,
+              cell.cardView.frame.contains(cell.convert(point, from: collectionView)) else { return nil }
+        
+        return UIContextMenuConfiguration(identifier: indexPath as NSCopying, actionProvider: { [weak self] actions in
+            guard let self = self else { return nil }
+            
+            var menuItems: [UIAction] = []
+            menuItems.append(self.createPinAction(for: indexPath, isPinned: cell.isPinned))
+            menuItems.append(self.createEditAction())
+            menuItems.append(self.createDeleteAction())
+            
+            return UIMenu(children: menuItems)
+        })
+    }
+    
+    private func createPinAction(for indexPath: IndexPath, isPinned: Bool) -> UIAction {
+        let title = isPinned ? NSLocalizedString("contextMenu.unpin.title", comment: "Unpin item") :
+        NSLocalizedString("contextMenu.pin.title", comment: "Pin item")
+        
+        return UIAction(title: title) { [weak self] action in
+            guard let self = self else { return }
+            if isPinned {
+                self.trackerStore.unpinTracker(at: indexPath)
+            } else {
+                self.trackerStore.pinTracker(at: indexPath)
             }
-
-            let parameters = UIPreviewParameters()
-            parameters.backgroundColor = .clear
-
-            let targetedPreview = UITargetedPreview(view: cell.cardView, parameters: parameters)
-            return targetedPreview
         }
+    }
+    
+    private func createEditAction() -> UIAction {
+        let title = NSLocalizedString("contextMenu.edit.title", comment: "Edit item")
+        return UIAction(title: title) { action in
+            
+        }
+    }
+    
+    private func createDeleteAction() -> UIAction {
+        let title = NSLocalizedString("contextMenu.delete.title", comment: "Delete item")
+        return UIAction(title: title, attributes: .destructive) { action in
+            
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        contextMenuConfiguration configuration: UIContextMenuConfiguration,
+                        highlightPreviewForItemAt indexPath: IndexPath) -> UITargetedPreview? {
+        guard let indexPath = configuration.identifier as? IndexPath,
+              let cell = collectionView.cellForItem(at: indexPath) as? TrackersCell else { return nil }
+        
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear
+        
+        let targetedPreview = UITargetedPreview(view: cell.cardView, parameters: parameters)
+        return targetedPreview
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        contextMenuConfiguration configuration: UIContextMenuConfiguration,
+                        dismissalPreviewForItemAt indexPath: IndexPath) -> UITargetedPreview? {
+        guard let indexPath = configuration.identifier as? IndexPath,
+              let cell = collectionView.cellForItem(at: indexPath) as? TrackersCell else {
+            return nil
+        }
+        
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear
+        
+        let targetedPreview = UITargetedPreview(view: cell.cardView, parameters: parameters)
+        return targetedPreview
+    }
 }
 
 
@@ -272,7 +286,8 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.config(with: completionStatus.tracker,
                     numberOfCompletions: completionStatus.numberOfCompletions,
                     isCompleted: completionStatus.isCompleted,
-                    completionIsEnabled: currentDate <= Date().dayStart)
+                    completionIsEnabled: currentDate <= Date().dayStart,
+                    isPinned: completionStatus.isPinned)
         cell.delegate = self
         return cell
     }
@@ -337,6 +352,11 @@ extension TrackersViewController: TrackerStoreDelegate {
             
             for move in update.movedIndexes{
                 collectionView.moveItem(at: move.from, to: move.to)
+            }
+        }, completion: nil)
+        collectionView.performBatchUpdates({
+            for move in update.movedIndexes {
+                collectionView.reloadItems(at: [move.to])
             }
         }, completion: nil)
         configureViewState()
