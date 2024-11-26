@@ -24,6 +24,7 @@ createButton.title = "Créer";
 addCategoryButton.title = "Ajouter une catégorie";
 doneButton.title = "Ça y est";
 saveButton.title = "Enregistrer";
+deleteButton.title = "Supprimer";
 
 categories.emptyView.caption = "Les habitudes et les événements\n peuvent être combinés dans le sens";
 
@@ -43,3 +44,4 @@ contextMenu.edit.title = "Éditer";
 contextMenu.delete.title = "Supprimer";
 
 pinnedCategories.name = "Fixe";
+deleteConfirmation.title = "Vous êtes sûr de vouloir supprimer le Tracker?";

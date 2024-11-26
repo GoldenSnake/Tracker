@@ -5,7 +5,7 @@ import UIKit
 final class TrackersViewController: UIViewController {
     
     static let addTrackerNotificationName = NSNotification.Name("AddNewTracker")
-       static let updateTrackerNotificationName = NSNotification.Name("UpdateTracker")
+    static let updateTrackerNotificationName = NSNotification.Name("UpdateTracker")
     // MARK: - Private Properties
     
     private lazy var trackerStore: TrackerStoreProtocol = {
@@ -145,45 +145,45 @@ final class TrackersViewController: UIViewController {
     }
     
     private func addObservers() {
-           NotificationCenter.default.addObserver(
-               self,
-               selector: #selector(addNewTracker),
-               name: TrackersViewController.addTrackerNotificationName,
-               object: nil
-           )
-
-           NotificationCenter.default.addObserver(
-               self,
-               selector: #selector(updateTracker),
-               name: TrackersViewController.updateTrackerNotificationName,
-               object: nil
-           )
-       }
-
-       private func removeObservers() {
-           NotificationCenter.default.removeObserver(
-               self,
-               name: TrackersViewController.addTrackerNotificationName,
-               object: nil
-           )
-
-           NotificationCenter.default.removeObserver(
-               self,
-               name: TrackersViewController.updateTrackerNotificationName,
-               object: nil
-           )
-       }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(addNewTracker),
+            name: TrackersViewController.addTrackerNotificationName,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateTracker),
+            name: TrackersViewController.updateTrackerNotificationName,
+            object: nil
+        )
+    }
+    
+    private func removeObservers() {
+        NotificationCenter.default.removeObserver(
+            self,
+            name: TrackersViewController.addTrackerNotificationName,
+            object: nil
+        )
+        
+        NotificationCenter.default.removeObserver(
+            self,
+            name: TrackersViewController.updateTrackerNotificationName,
+            object: nil
+        )
+    }
     
     // MARK: - Actions
     @objc
-       private func updateTracker(_ notification: Notification) {
-           guard let category = notification.object as? TrackerCategory,
-                 let tracker = category.trackers.first else {
-               return
-           }
-
-           trackerStore.updateTracker(tracker, with: category)
-       }
+    private func updateTracker(_ notification: Notification) {
+        guard let category = notification.object as? TrackerCategory,
+              let tracker = category.trackers.first else {
+            return
+        }
+        
+        trackerStore.updateTracker(tracker, with: category)
+    }
     
     @objc
     private func addNewTracker(_ notification: Notification) {
@@ -238,7 +238,7 @@ extension TrackersViewController: UICollectionViewDelegate {
             var menuItems: [UIAction] = []
             menuItems.append(self.createPinAction(for: indexPath, isPinned: cell.isPinned))
             menuItems.append(self.createEditAction(for: indexPath))
-            menuItems.append(self.createDeleteAction())
+            menuItems.append(self.createDeleteAction(for: indexPath))
             
             return UIMenu(children: menuItems)
         })
@@ -261,23 +261,52 @@ extension TrackersViewController: UICollectionViewDelegate {
     private func createEditAction(for indexPath: IndexPath) -> UIAction {
         let title = NSLocalizedString("contextMenu.edit.title", comment: "Edit item")
         return UIAction(title: title) { [weak self] action in
-                    guard let self = self else { return }
-
-                    let viewController = NewTrackerVC(
-                        completionStatus: self.trackerStore.completionStatus(for: indexPath),
-                        categoryName: self.trackerStore.categoryName(for: indexPath)
-                    )
-
-                    let navigationController = UINavigationController(rootViewController: viewController)
-                    navigationController.modalPresentationStyle = .formSheet
-                    present(navigationController, animated: true)
-                }
+            guard let self = self else { return }
+            
+            let viewController = NewTrackerVC(
+                completionStatus: self.trackerStore.completionStatus(for: indexPath),
+                categoryName: self.trackerStore.categoryName(for: indexPath)
+            )
+            
+            let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.modalPresentationStyle = .formSheet
+            present(navigationController, animated: true)
+        }
     }
     
-    private func createDeleteAction() -> UIAction {
+    private func createDeleteAction(for indexPath: IndexPath) -> UIAction {
         let title = NSLocalizedString("contextMenu.delete.title", comment: "Delete item")
-        return UIAction(title: title, attributes: .destructive) { action in
+        return UIAction(title: title, attributes: .destructive) { [weak self] action in
+            guard let self = self else { return }
             
+            let actionSheetController = UIAlertController(
+                title: NSLocalizedString("deleteConfirmation.title",
+                                         comment: "Are you sure you want to delete this tracker?"),
+                message: nil,
+                preferredStyle: .actionSheet
+            )
+            
+            let deleteAction = UIAlertAction(
+                title: NSLocalizedString("deleteButton.title",
+                                         comment: "Delete button title"),
+                style: .destructive
+            ) { [weak self] _ in
+                self?.trackerStore.deleteTracker(at: indexPath)
+            }
+            
+            let cancelAction = UIAlertAction(
+                title: NSLocalizedString("cancelButton.title",
+                                         comment: "Cancel button title"),
+                style: .cancel,
+                handler: nil
+            )
+            
+            actionSheetController.addAction(deleteAction)
+            actionSheetController.addAction(cancelAction)
+            
+            actionSheetController.preferredAction = cancelAction
+            
+            self.present(actionSheetController, animated: true, completion: nil)
         }
     }
     
