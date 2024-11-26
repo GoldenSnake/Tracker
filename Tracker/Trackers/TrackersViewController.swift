@@ -15,11 +15,8 @@ final class TrackersViewController: UIViewController {
     private var currentDate: Date = Date().dayStart
     private var currentFilter: FilterOptions = .all
     
-    private let emptyStateView: UIView = {
-        let view = EmptyStateView()
-        let text = NSLocalizedString("trackers.emptyView.caption",
-                                     comment: "Caption for the stub view when there are no items to track")
-        view.config(with: text)
+    private let emptyStateView: EmptyStateView = {
+        let view = EmptyStateView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -80,8 +77,24 @@ final class TrackersViewController: UIViewController {
     // MARK: - Private Methods
     
     private func configureViewState() {
-        collectionView.isHidden = trackerStore.isEmpty
-        emptyStateView.isHidden = !trackerStore.isEmpty
+        let isFilteredEmpty = trackerStore.isFilteredEmpty
+               let isDateEmpty = isFilteredEmpty ? trackerStore.isDateEmpty : false
+
+               collectionView.isHidden = isFilteredEmpty
+        emptyStateView.isHidden = !isFilteredEmpty
+               filterButton.isHidden = isDateEmpty
+
+               if isDateEmpty {
+                   let caption = NSLocalizedString("emptyView.caption.noTrackersAtDate",
+                                                   comment: "Caption when there are no trackers for a selected date")
+                   let image = UIImage(named: "Star")
+                   emptyStateView.config(with: caption, image: image)
+               } else if isFilteredEmpty {
+                   let caption = NSLocalizedString("emptyView.caption.noTrackersMatchFilter",
+                                                   comment: "Caption when no trackers match the current filter")
+                   let image = UIImage(named: "MonocleEmoji")
+                   emptyStateView.config(with: caption, image: image)
+               }
         
         let filterTitleColor: UIColor = (currentFilter == .all || currentFilter == .today) ? .ypWhite : .ypRed
         filterButton.setTitleColor(filterTitleColor, for: .normal)

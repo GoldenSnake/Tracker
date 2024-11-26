@@ -20,7 +20,7 @@ final class EmptyStateView: UIView{
     }
     
     private func setupImage(){
-        image.image = UIImage(named: "Star")
+//        image.image = UIImage(named: "Star")
         image.contentMode = .scaleAspectFit
         image.translatesAutoresizingMaskIntoConstraints = false
         
@@ -45,8 +45,9 @@ final class EmptyStateView: UIView{
         ])
     }
     
-    func config(with text: String) {
+    func config(with text: String, image: UIImage?) {
         label.text = text
+        self.image.image = image
     }
     
 }

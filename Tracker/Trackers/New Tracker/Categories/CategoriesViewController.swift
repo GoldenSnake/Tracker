@@ -43,7 +43,7 @@ final class CategoriesViewController: UIViewController {
             comment: "Caption for the stub view explaining grouping habits and events"
         )
         let emptyView = EmptyStateView()
-        emptyView.config(with: text)
+        emptyView.config(with: text, image: UIImage(named: "Star"))
         emptyView.translatesAutoresizingMaskIntoConstraints = false
         return emptyView
     }()
