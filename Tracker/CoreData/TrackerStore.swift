@@ -23,7 +23,7 @@ protocol TrackerStoreDelegate: AnyObject {
 
 protocol TrackerStoreProtocol {
     var isFilteredEmpty: Bool { get }
-       var isDateEmpty: Bool { get }
+    var isDateEmpty: Bool { get }
     var numberOfSections: Int { get }
     func numberOfItemsInSection(_ section: Int) -> Int
     func sectionName(for section: Int) -> String
@@ -71,6 +71,12 @@ final class TrackerStore: NSObject {
         return fetchedResultsController
     }()
     
+    override init() {
+        date = Date().dayStart
+        filter = .all
+        categoryProvider = TrackerCategoryStore(delegate: nil)
+    }
+    
     init(delegate: TrackerStoreDelegate, date: Date, filter: FilterOptions, categoryProvider: TrackerCategoryCoreDataProvider? = nil) {
         self.delegate = delegate
         self.date = date
@@ -83,85 +89,85 @@ final class TrackerStore: NSObject {
     }
     
     private func fetchPredicate() -> NSPredicate {
-            switch filter {
-            case .all, .today:
-                return allTrackersFetchPredicate()
-            case .completed:
-                return completedTrackersFetchPredicate()
-            case .uncompleted:
-                return uncompletedTrackersFetchPredicate()
-            }
+        switch filter {
+        case .all, .today:
+            return allTrackersFetchPredicate()
+        case .completed:
+            return completedTrackersFetchPredicate()
+        case .uncompleted:
+            return uncompletedTrackersFetchPredicate()
         }
+    }
+    
+    private func allTrackersFetchPredicate() -> NSPredicate {
+        let scheduleMatchDate = NSPredicate(
+            format: "%K CONTAINS[n] %@",
+            #keyPath(TrackerCoreData.days),
+            String(Weekday(date: date).rawValue))
         
-        private func allTrackersFetchPredicate() -> NSPredicate {
-            let scheduleMatchDate = NSPredicate(
-                format: "%K CONTAINS[n] %@",
-                #keyPath(TrackerCoreData.days),
-                String(Weekday(date: date).rawValue))
-            
-            let completionMatchDate = NSPredicate(
-                format: "SUBQUERY(%K, $record, $record != nil AND $record.date == %@).@count > 0",
-                #keyPath(TrackerCoreData.records),
-                date as NSDate)
-            
-            let isIrregular = NSPredicate(
-                format: "%K == %@",
-                #keyPath(TrackerCoreData.days),
-                "")
-            
-            let isNotCompletedEver = NSPredicate(
-                format: "SUBQUERY(%K, $record, $record != nil).@count == 0",
-                #keyPath(TrackerCoreData.records))
-            
-            let isNotCompletedIrregular = NSCompoundPredicate(
-                andPredicateWithSubpredicates: [isIrregular, isNotCompletedEver])
-            
-            let finalPredicate = NSCompoundPredicate(
-                orPredicateWithSubpredicates: [scheduleMatchDate, completionMatchDate, isNotCompletedIrregular])
-            
-            return finalPredicate
-        }
+        let completionMatchDate = NSPredicate(
+            format: "SUBQUERY(%K, $record, $record != nil AND $record.date == %@).@count > 0",
+            #keyPath(TrackerCoreData.records),
+            date as NSDate)
         
-        private func completedTrackersFetchPredicate() -> NSPredicate {
-            let completionMatchDate = NSPredicate(
-                format: "SUBQUERY(%K, $record, $record != nil AND $record.date == %@).@count > 0",
-                #keyPath(TrackerCoreData.records),
-                date as NSDate)
-            
-            return completionMatchDate
-        }
+        let isIrregular = NSPredicate(
+            format: "%K == %@",
+            #keyPath(TrackerCoreData.days),
+            "")
         
-        private func uncompletedTrackersFetchPredicate() -> NSPredicate {
-            let isNotCompletedAtDate = NSPredicate(
-                format: "SUBQUERY(%K, $record, $record != nil AND $record.date == %@).@count == 0",
-                #keyPath(TrackerCoreData.records),
-                date as NSDate)
-            
-            let scheduleMatchDate = NSPredicate(
-                format: "%K CONTAINS[n] %@",
-                #keyPath(TrackerCoreData.days),
-                String(Weekday(date: date).rawValue))
-            
-            let isNotCompletedRegular = NSCompoundPredicate(
-                andPredicateWithSubpredicates: [isNotCompletedAtDate, scheduleMatchDate])
-            
-            let isIrregular = NSPredicate(
-                format: "%K == %@",
-                #keyPath(TrackerCoreData.days),
-                "")
-            
-            let isNotCompletedEver = NSPredicate(
-                format: "SUBQUERY(%K, $record, $record != nil).@count == 0",
-                #keyPath(TrackerCoreData.records))
-            
-            let isNotCompletedIrregular = NSCompoundPredicate(
-                andPredicateWithSubpredicates: [isIrregular, isNotCompletedEver])
-            
-            let finalPredicate = NSCompoundPredicate(
-                orPredicateWithSubpredicates: [isNotCompletedRegular, isNotCompletedIrregular])
-            
-            return finalPredicate
-        }
+        let isNotCompletedEver = NSPredicate(
+            format: "SUBQUERY(%K, $record, $record != nil).@count == 0",
+            #keyPath(TrackerCoreData.records))
+        
+        let isNotCompletedIrregular = NSCompoundPredicate(
+            andPredicateWithSubpredicates: [isIrregular, isNotCompletedEver])
+        
+        let finalPredicate = NSCompoundPredicate(
+            orPredicateWithSubpredicates: [scheduleMatchDate, completionMatchDate, isNotCompletedIrregular])
+        
+        return finalPredicate
+    }
+    
+    private func completedTrackersFetchPredicate() -> NSPredicate {
+        let completionMatchDate = NSPredicate(
+            format: "SUBQUERY(%K, $record, $record != nil AND $record.date == %@).@count > 0",
+            #keyPath(TrackerCoreData.records),
+            date as NSDate)
+        
+        return completionMatchDate
+    }
+    
+    private func uncompletedTrackersFetchPredicate() -> NSPredicate {
+        let isNotCompletedAtDate = NSPredicate(
+            format: "SUBQUERY(%K, $record, $record != nil AND $record.date == %@).@count == 0",
+            #keyPath(TrackerCoreData.records),
+            date as NSDate)
+        
+        let scheduleMatchDate = NSPredicate(
+            format: "%K CONTAINS[n] %@",
+            #keyPath(TrackerCoreData.days),
+            String(Weekday(date: date).rawValue))
+        
+        let isNotCompletedRegular = NSCompoundPredicate(
+            andPredicateWithSubpredicates: [isNotCompletedAtDate, scheduleMatchDate])
+        
+        let isIrregular = NSPredicate(
+            format: "%K == %@",
+            #keyPath(TrackerCoreData.days),
+            "")
+        
+        let isNotCompletedEver = NSPredicate(
+            format: "SUBQUERY(%K, $record, $record != nil).@count == 0",
+            #keyPath(TrackerCoreData.records))
+        
+        let isNotCompletedIrregular = NSCompoundPredicate(
+            andPredicateWithSubpredicates: [isIrregular, isNotCompletedEver])
+        
+        let finalPredicate = NSCompoundPredicate(
+            orPredicateWithSubpredicates: [isNotCompletedRegular, isNotCompletedIrregular])
+        
+        return finalPredicate
+    }
     
     private func fetchTrackerByID(_ id: UUID) -> TrackerCoreData? {
         let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
@@ -171,6 +177,38 @@ final class TrackerStore: NSObject {
         return try? context.fetch(fetchRequest).first
     }
     
+    func deleteAll() throws {
+        let fetchRequestRecords: NSFetchRequest<NSFetchRequestResult> = TrackerRecordCoreData.fetchRequest()
+        let fetchRequestTrackers: NSFetchRequest<NSFetchRequestResult> = TrackerCoreData.fetchRequest()
+        let fetchRequestCategories: NSFetchRequest<NSFetchRequestResult> = TrackerCategoryCoreData.fetchRequest()
+        
+        let batchDeleteRequestRecords = NSBatchDeleteRequest(fetchRequest: fetchRequestRecords)
+        let batchDeleteRequestTrackers = NSBatchDeleteRequest(fetchRequest: fetchRequestTrackers)
+        let batchDeleteRequestCategories = NSBatchDeleteRequest(fetchRequest: fetchRequestCategories)
+        
+        batchDeleteRequestRecords.resultType = .resultTypeObjectIDs
+        batchDeleteRequestTrackers.resultType = .resultTypeObjectIDs
+        batchDeleteRequestCategories.resultType = .resultTypeObjectIDs
+        
+        let resultRecords = try context.execute(batchDeleteRequestRecords) as? NSBatchDeleteResult
+        let resultTrackers = try context.execute(batchDeleteRequestTrackers) as? NSBatchDeleteResult
+        let resultCategories = try context.execute(batchDeleteRequestCategories) as? NSBatchDeleteResult
+        
+        if let deletedRecordIDs = resultRecords?.result as? [NSManagedObjectID] {
+            let changes = [NSDeletedObjectsKey: deletedRecordIDs]
+            NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [context])
+        }
+        
+        if let deletedTrackerIDs = resultTrackers?.result as? [NSManagedObjectID] {
+            let changes = [NSDeletedObjectsKey: deletedTrackerIDs]
+            NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [context])
+        }
+        
+        if let deletedCategoryIDs = resultCategories?.result as? [NSManagedObjectID] {
+            let changes = [NSDeletedObjectsKey: deletedCategoryIDs]
+            NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [context])
+        }
+    }
 }
 
 // MARK: - TrackerStoreProtocol
@@ -185,12 +223,12 @@ extension TrackerStore: TrackerStoreProtocol {
     }
     
     var isDateEmpty: Bool {
-         let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
-         fetchRequest.predicate = allTrackersFetchPredicate()
-         fetchRequest.fetchLimit = 1
-
-         return (try? context.fetch(fetchRequest))?.isEmpty ?? true
-     }
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.predicate = allTrackersFetchPredicate()
+        fetchRequest.fetchLimit = 1
+        
+        return (try? context.fetch(fetchRequest))?.isEmpty ?? true
+    }
     
     func sectionName(for section: Int) -> String {
         let order = fetchedResultsController.sections?[section].name ?? ""

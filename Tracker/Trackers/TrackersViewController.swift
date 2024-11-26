@@ -4,6 +4,21 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     
+    // MARK: - Public Methods
+    func setCurrentDate(to date: Date) {
+        currentDate = date.dayStart
+        datePicker.date = currentDate
+        
+        
+        if currentFilter == .today && currentDate != Date().dayStart {
+            currentFilter = .all
+        }
+        
+        trackerStore.applyFilter(currentFilter, on: currentDate)
+        collectionView.reloadData()
+        configureViewState()
+    }
+    
     static let addTrackerNotificationName = NSNotification.Name("AddNewTracker")
     static let updateTrackerNotificationName = NSNotification.Name("UpdateTracker")
     // MARK: - Private Properties
@@ -63,7 +78,7 @@ final class TrackersViewController: UIViewController {
         view.addSubview(filterButton)
         setupConstraints()
         setupNavigationBar()
-//                collectionView.isHidden = true
+        //                collectionView.isHidden = true
         
         configureViewState()
         
@@ -78,23 +93,23 @@ final class TrackersViewController: UIViewController {
     
     private func configureViewState() {
         let isFilteredEmpty = trackerStore.isFilteredEmpty
-               let isDateEmpty = isFilteredEmpty ? trackerStore.isDateEmpty : false
-
-               collectionView.isHidden = isFilteredEmpty
+        let isDateEmpty = isFilteredEmpty ? trackerStore.isDateEmpty : false
+        
+        collectionView.isHidden = isFilteredEmpty
         emptyStateView.isHidden = !isFilteredEmpty
-               filterButton.isHidden = isDateEmpty
-
-               if isDateEmpty {
-                   let caption = NSLocalizedString("emptyView.caption.noTrackersAtDate",
-                                                   comment: "Caption when there are no trackers for a selected date")
-                   let image = UIImage(named: "Star")
-                   emptyStateView.config(with: caption, image: image)
-               } else if isFilteredEmpty {
-                   let caption = NSLocalizedString("emptyView.caption.noTrackersMatchFilter",
-                                                   comment: "Caption when no trackers match the current filter")
-                   let image = UIImage(named: "MonocleEmoji")
-                   emptyStateView.config(with: caption, image: image)
-               }
+        filterButton.isHidden = isDateEmpty
+        
+        if isDateEmpty {
+            let caption = NSLocalizedString("emptyView.caption.noTrackersAtDate",
+                                            comment: "Caption when there are no trackers for a selected date")
+            let image = UIImage(named: "Star")
+            emptyStateView.config(with: caption, image: image)
+        } else if isFilteredEmpty {
+            let caption = NSLocalizedString("emptyView.caption.noTrackersMatchFilter",
+                                            comment: "Caption when no trackers match the current filter")
+            let image = UIImage(named: "MonocleEmoji")
+            emptyStateView.config(with: caption, image: image)
+        }
         
         let filterTitleColor: UIColor = (currentFilter == .all || currentFilter == .today) ? .ypWhite : .ypRed
         filterButton.setTitleColor(filterTitleColor, for: .normal)
@@ -241,37 +256,37 @@ final class TrackersViewController: UIViewController {
         datePicker.removeFromSuperview()
         
         if currentFilter == .today && currentDate != Date().dayStart {
-                  currentFilter = .all
-              }
-
-              trackerStore.applyFilter(currentFilter, on: currentDate)
+            currentFilter = .all
+        }
+        
+        trackerStore.applyFilter(currentFilter, on: currentDate)
         collectionView.reloadData()
         configureViewState()
     }
     
     @objc private func filterButtonDidTap() {
-           let viewController = FilterViewController()
-           viewController.currentFilter = currentFilter
-           viewController.onFilterSelected = { [weak self] filter in
-               guard let self else { return }
-
-               self.currentFilter = filter
-
-               if filter == .today {
-                   self.currentDate = Date().dayStart
-                   datePicker.date = Date().dayStart
-                   
-               }
-
-               self.trackerStore.applyFilter(currentFilter, on: currentDate)
-               self.collectionView.reloadData()
-               self.configureViewState()
-           }
-
-           let navigationController = UINavigationController(rootViewController: viewController)
-           navigationController.modalPresentationStyle = .formSheet
-           present(navigationController, animated: true)
-       }
+        let viewController = FilterViewController()
+        viewController.currentFilter = currentFilter
+        viewController.onFilterSelected = { [weak self] filter in
+            guard let self else { return }
+            
+            self.currentFilter = filter
+            
+            if filter == .today {
+                self.currentDate = Date().dayStart
+                datePicker.date = Date().dayStart
+                
+            }
+            
+            self.trackerStore.applyFilter(currentFilter, on: currentDate)
+            self.collectionView.reloadData()
+            self.configureViewState()
+        }
+        
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.modalPresentationStyle = .formSheet
+        present(navigationController, animated: true)
+    }
 }
 
 // MARK: - UICollectionViewDelegate
