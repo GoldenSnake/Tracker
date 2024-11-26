@@ -28,7 +28,7 @@ final class TrackersCell: UICollectionViewCell {
     private let pinImage: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "pin.fill")
-        imageView.tintColor = .ypWhite
+        imageView.tintColor = .white
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -85,7 +85,7 @@ final class TrackersCell: UICollectionViewCell {
     }
     
     private func setupCircleVeiw() {
-        circleView.backgroundColor = .ypWhite.withAlphaComponent(0.3)
+        circleView.backgroundColor = .white.withAlphaComponent(0.3)
         circleView.layer.cornerRadius = 12
         circleView.layer.masksToBounds = true
         circleView.translatesAutoresizingMaskIntoConstraints = false
@@ -118,7 +118,8 @@ final class TrackersCell: UICollectionViewCell {
     private func setupTitleLabel() {
         titleLabel.text = "Текст"
         titleLabel.font = .systemFont(ofSize: 12, weight: .medium)
-        titleLabel.textColor = .ypWhite
+        titleLabel.overrideUserInterfaceStyle = .light
+        titleLabel.textColor = .white
         titleLabel.textAlignment = .left
         titleLabel.numberOfLines = 0
         titleLabel.translatesAutoresizingMaskIntoConstraints = false

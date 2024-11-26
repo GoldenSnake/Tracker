@@ -2,6 +2,7 @@
 import UIKit
 
 class TabBarController: UITabBarController {
+    private var border: CALayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,8 +24,29 @@ class TabBarController: UITabBarController {
         
         viewControllers = [navigationController, statistics]
         
-        tabBar.layer.borderWidth = 0.5
-        tabBar.layer.borderColor = UIColor.ypGray.cgColor
+        setupTopBorder()
+            }
+
+            override func viewDidLayoutSubviews() {
+                super.viewDidLayoutSubviews()
+                if let border {
+                    border.frame = CGRect(x: 0, y: 0, width: tabBar.frame.width, height: 0.5)
+                }
+            }
+
+            override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+                super.traitCollectionDidChange(previousTraitCollection)
+                if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+                    border?.backgroundColor = UIColor.ypGrayDark.cgColor
+                }
+            }
+
+            private func setupTopBorder() {
+                let border = CALayer()
+                border.frame = CGRect(x: 0, y: 0, width: tabBar.frame.width, height: 0.5)
+                border.backgroundColor = UIColor.ypGrayDark.cgColor
+                tabBar.layer.addSublayer(border)
+                self.border = border
         
     }
     

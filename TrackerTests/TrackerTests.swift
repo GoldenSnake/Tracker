@@ -24,10 +24,10 @@ final class TrackerTests: XCTestCase {
         let irregularTracker = Tracker(id: UUID(), name: "Irregular", color: .deepPurpleSelection, emoji: "🍔", days: nil)
         store.addNewTracker(irregularTracker, to: category)
         
-        let viewController = TabBarController()
-        viewController.loadViewIfNeeded()
+        let TabBarViewController = TabBarController()
+        TabBarViewController.loadViewIfNeeded()
         
-        guard let navigationController = viewController.viewControllers?.first as? UINavigationController,
+        guard let navigationController = TabBarViewController.viewControllers?.first as? UINavigationController,
               let trackersVC = navigationController.viewControllers.first as? TrackersViewController else {
             XCTFail("Unexpected Tab Bar configuration")
             return
@@ -41,6 +41,7 @@ final class TrackerTests: XCTestCase {
         
         trackersVC.setCurrentDate(to: date)
         
-        assertSnapshot(of: viewController, as: .image())
+        assertSnapshot(of: TabBarViewController, as: .image(traits: .init(userInterfaceStyle: .light)))
+        assertSnapshot(of: TabBarViewController, as: .image(traits: .init(userInterfaceStyle: .dark)))
     }
 }

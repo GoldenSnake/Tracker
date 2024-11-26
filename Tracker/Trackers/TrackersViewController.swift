@@ -41,6 +41,7 @@ final class TrackersViewController: UIViewController {
         let title = NSLocalizedString("filter.title", comment: "Filter")
         button.setTitle(title, for: .normal)
         button.backgroundColor = .ypBlue
+        button.overrideUserInterfaceStyle = .light
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .regular)
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
@@ -111,12 +112,13 @@ final class TrackersViewController: UIViewController {
             emptyStateView.config(with: caption, image: image)
         }
         
-        let filterTitleColor: UIColor = (currentFilter == .all || currentFilter == .today) ? .ypWhite : .ypRed
+        let filterTitleColor: UIColor = (currentFilter == .all || currentFilter == .today) ? .white : .ypRed
         filterButton.setTitleColor(filterTitleColor, for: .normal)
     }
     
     private func setupCollectionVeiw() {
         view.addSubview(collectionView)
+        collectionView.backgroundColor = .ypWhite
         register()
         collectionView.contentInset = UIEdgeInsets(top: 24, left: 0, bottom: 50, right: 0)
         
@@ -162,6 +164,7 @@ final class TrackersViewController: UIViewController {
         
         navigationController?.navigationBar.prefersLargeTitles = true
         title = NSLocalizedString("trackers.tabBarItem.title", comment: "Title for the Trackers tab")
+        searchController.searchBar.searchTextField.textColor = .ypBlack
     }
     
     private func setupNavBarItemLeft() {
@@ -175,6 +178,10 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupNavBarItemRight() {
+        datePicker.backgroundColor = .ypGrayPale
+        datePicker.overrideUserInterfaceStyle = .light
+        datePicker.layer.cornerRadius = 8
+        datePicker.layer.masksToBounds = true
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .compact
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
@@ -187,10 +194,19 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupSearchController() {
-        searchController.searchBar.placeholder = NSLocalizedString(
-            "searchController.searchBar.placeholder",
-            comment: "Placeholder for the search bar"
+        
+        let searchTextField = searchController.searchBar.searchTextField
+        searchTextField.clearButtonMode = .never
+        searchTextField.attributedPlaceholder = NSAttributedString(
+            string: NSLocalizedString("searchController.searchBar.placeholder",
+                                      comment: "Placeholder for the search bar"),
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.ypWhiteGray]
         )
+        
+        if let glassIconView = searchTextField.leftView as? UIImageView {
+            glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
+            glassIconView.tintColor = .ypWhiteGray
+        }
         
         navigationItem.searchController = searchController
     }
