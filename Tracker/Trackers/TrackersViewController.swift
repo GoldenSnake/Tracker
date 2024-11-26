@@ -82,11 +82,15 @@ final class TrackersViewController: UIViewController {
     private func configureViewState() {
         collectionView.isHidden = trackerStore.isEmpty
         emptyStateView.isHidden = !trackerStore.isEmpty
+        
+        let filterTitleColor: UIColor = (currentFilter == .all || currentFilter == .today) ? .ypWhite : .ypRed
+        filterButton.setTitleColor(filterTitleColor, for: .normal)
     }
     
     private func setupCollectionVeiw() {
         view.addSubview(collectionView)
         register()
+        collectionView.contentInset = UIEdgeInsets(top: 24, left: 0, bottom: 50, right: 0)
         
         //DataSourse and Delegate
         collectionView.dataSource = self
