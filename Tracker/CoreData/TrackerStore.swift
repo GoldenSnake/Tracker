@@ -27,10 +27,12 @@ protocol TrackerStoreProtocol {
     func numberOfItemsInSection(_ section: Int) -> Int
     func sectionName(for section: Int) -> String
     func addNewTracker(_ tracker: Tracker, to category: TrackerCategory)
+    func updateTracker(_ tracker: Tracker, with category: TrackerCategory)
     func deleteTracker(at indexPath: IndexPath)
     func pinTracker(at indexPath: IndexPath)
     func unpinTracker(at indexPath: IndexPath)
     func completionStatus(for indexPath: IndexPath) -> TrackerCompletion
+    func categoryName(for indexPath: IndexPath) -> String
     func updateDate(_ newDate: Date)
     func changeCompletion(for indexPath: IndexPath, to isCompleted: Bool)
 }
@@ -99,6 +101,15 @@ final class TrackerStore: NSObject {
             #keyPath(TrackerCoreData.records)
         )
     }
+    
+    private func fetchTrackerByID(_ id: UUID) -> TrackerCoreData? {
+           let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+           fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+           fetchRequest.fetchLimit = 1
+
+           return try? context.fetch(fetchRequest).first
+       }
+    
 }
 
 // MARK: - TrackerStoreProtocol
@@ -139,6 +150,26 @@ extension TrackerStore: TrackerStoreProtocol {
         
         CoreDataManager.shared.saveContext()
     }
+    
+    func updateTracker(_ tracker: Tracker, with category: TrackerCategory) {
+            guard let trackerCoreData = fetchTrackerByID(tracker.id) else { return }
+
+            let categoryCoreData = categoryProvider.fetchOrCreateCategory(category.name)
+
+            trackerCoreData.name = tracker.name
+            trackerCoreData.emoji = tracker.emoji
+            trackerCoreData.colorHex = UIColorMarshalling.hexString(from: tracker.color)
+            trackerCoreData.days = tracker.days?.toRawString() ?? ""
+
+            if trackerCoreData.category?.isPinned ?? false {
+                trackerCoreData.categoryBeforePin = categoryCoreData
+            } else {
+                trackerCoreData.category = categoryCoreData
+            }
+
+        CoreDataManager.shared.saveContext()
+        }
+
     
     func deleteTracker(at indexPath: IndexPath) {
     }
@@ -188,6 +219,16 @@ extension TrackerStore: TrackerStoreProtocol {
                                                   isPinned: trackerCoreData.category?.isPinned ?? false)
         return trackerCompletion
     }
+    
+    func categoryName(for indexPath: IndexPath) -> String {
+          let trackerCoreData = fetchedResultsController.object(at: indexPath)
+
+          if trackerCoreData.category?.isPinned ?? false {
+              return trackerCoreData.categoryBeforePin?.name ?? ""
+          } else {
+              return trackerCoreData.category?.name ?? ""
+          }
+      }
     
     func updateDate(_ newDate: Date) {
         date = newDate

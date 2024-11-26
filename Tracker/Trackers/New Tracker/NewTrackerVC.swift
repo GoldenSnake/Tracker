@@ -4,6 +4,8 @@ final class NewTrackerVC: UIViewController {
     
     // MARK: - Private Properties
     
+    private let isNew: Bool
+    
     private let colors: [UIColor] = [
         .blueLilacSelection,
         .blueSelection,
@@ -40,13 +42,20 @@ final class NewTrackerVC: UIViewController {
     private var days: Set<Weekday>?
     private var color = UIColor.clear
     private var emoji = ""
+    private let id: UUID
+    private let numberOfCompletions: Int
     
     private var selectedCells: [Int: IndexPath] = [:]
     
     private var scrollView = UIScrollView()
     private var contentView = UIView()
-    
-    
+    private lazy var numberOfCompletionsLabel: UILabel = {
+        let label = UILabel()
+        label.font = .boldSystemFont(ofSize: 32)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     // TableView
     private let tableView = UITableView()
     
@@ -96,6 +105,23 @@ final class NewTrackerVC: UIViewController {
     
     init(trackerType: TrackerType) {
         self.trackerType = trackerType
+        isNew = true
+        id = UUID()
+        numberOfCompletions = 0
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(completionStatus: TrackerCompletion, categoryName: String) {
+        isNew = false
+        trackerType = (completionStatus.tracker.days?.isEmpty ?? true) ? .irregular : .regular
+        id = completionStatus.tracker.id
+        name = completionStatus.tracker.name
+        self.categoryName = categoryName
+        color = completionStatus.tracker.color
+        emoji = completionStatus.tracker.emoji
+        days = completionStatus.tracker.days
+        numberOfCompletions = completionStatus.numberOfCompletions
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -121,6 +147,9 @@ final class NewTrackerVC: UIViewController {
         setupTableView()
         setupCollectionView()
         
+        if !isNew {
+            contentView.addSubview(numberOfCompletionsLabel)
+        }
         contentView.addSubview(tableView)
         contentView.addSubview(collectionView)
         contentView.addSubview(buttonStackView)
@@ -128,6 +157,12 @@ final class NewTrackerVC: UIViewController {
         view.addSubview(scrollView)
         
         setupConstraints()
+        
+        if isNew {
+            configureForNewTracker()
+        } else {
+            configureForExistingTracker()
+        }
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
@@ -160,7 +195,10 @@ final class NewTrackerVC: UIViewController {
     }
     
     private func setupCreateButton() {
-        let title = NSLocalizedString("createButton.title", comment: "Title for the create button")
+        let title = isNew
+        ? NSLocalizedString("createButton.title", comment: "Title for the create button")
+        : NSLocalizedString("saveButton.title", comment: "Title for the save button")
+        
         createButton.setTitle(title, for: .normal)
         createButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
@@ -202,12 +240,37 @@ final class NewTrackerVC: UIViewController {
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .medium),
             NSAttributedString.Key.foregroundColor: UIColor.ypBlack
         ]
+    }
+    
+    private func configureForNewTracker() {
+        title = trackerType == .regular
+        ? NSLocalizedString("newTrackerView.title.regular", comment: "Title for creating a new habit")
+        : NSLocalizedString("newTrackerView.title.irregular", comment: "Title for creating a new irregular event")
+    }
+    
+    private func configureForExistingTracker() {
+        title = trackerType == .regular
+        ? NSLocalizedString("existingTrackerView.title.regular", comment: "Title for editing existing habit")
+        : NSLocalizedString("existingTrackerView.title.irregular", comment: "Title for editing existing irregular event")
         
-        switch trackerType {
-        case .regular:
-            title = NSLocalizedString("newTrackerView.title.regular", comment: "Title for creating a new habit")
-        case .irregular:
-            title = NSLocalizedString("newTrackerView.title.irregular", comment: "Title for creating a new irregular event")
+        numberOfCompletionsLabel.text = String(
+            format: NSLocalizedString(
+                "numberOfDays",
+                comment: "Number of days"
+            ),
+            numberOfCompletions
+        )
+        
+        if let emojiIndex = emojis.firstIndex(of: emoji) {
+            let indexPath = IndexPath(item: emojiIndex, section: 0)
+            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+            selectedCells[0] = indexPath
+        }
+        
+        if let colorIndex = colors.firstIndex(where: { UIColorMarshalling.hexString(from: $0) == UIColorMarshalling.hexString(from: color) }) {
+            let indexPath = IndexPath(item: colorIndex, section: 1)
+            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+            selectedCells[1] = indexPath
         }
     }
     
@@ -285,12 +348,28 @@ final class NewTrackerVC: UIViewController {
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
             // Ограничение высоты contentView
-            contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor, constant: 1),
-            
-            tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            tableView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            
+            contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor, constant: 1)
+        ])
+        
+        if isNew {
+            NSLayoutConstraint.activate([
+                tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+                tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                tableView.topAnchor.constraint(equalTo: contentView.topAnchor)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                numberOfCompletionsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+                numberOfCompletionsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                numberOfCompletionsLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
+                
+                tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+                tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                tableView.topAnchor.constraint(equalTo: numberOfCompletionsLabel.bottomAnchor, constant: 16),
+            ])
+        }
+        
+        NSLayoutConstraint.activate([
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 16),
@@ -314,10 +393,14 @@ final class NewTrackerVC: UIViewController {
     }
     
     @objc private func createButtonTapped() {
-        let tracker = Tracker(id: UUID(), name: name, color: color, emoji: emoji, days: days)
+        let notification = isNew
+        ? TrackersViewController.addTrackerNotificationName
+        : TrackersViewController.updateTrackerNotificationName
+        
+        let tracker = Tracker(id: id, name: name, color: color, emoji: emoji, days: days)
         let category = TrackerCategory(name: categoryName, trackers: [tracker])
         
-        NotificationCenter.default.post(name: TrackersViewController.notificationName, object: category)
+        NotificationCenter.default.post(name: notification, object: category)
         self.dismiss(animated: true)
     }
 }
@@ -362,7 +445,7 @@ extension NewTrackerVC: UITableViewDataSource, UITableViewDelegate {
             "newTrackerView.name.placeholder",
             comment: "Placeholder for the tracker name input"
         )
-        cell.configure(placeholder: placeholder) { [weak self] text in
+        cell.configure(text: name, placeholder: placeholder) { [weak self] text in
             self?.name = text
             self?.configureViewState()
         }

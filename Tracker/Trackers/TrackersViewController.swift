@@ -4,7 +4,8 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     
-    static let notificationName = NSNotification.Name("AddNewTracker")
+    static let addTrackerNotificationName = NSNotification.Name("AddNewTracker")
+       static let updateTrackerNotificationName = NSNotification.Name("UpdateTracker")
     // MARK: - Private Properties
     
     private lazy var trackerStore: TrackerStoreProtocol = {
@@ -55,11 +56,11 @@ final class TrackersViewController: UIViewController {
         
         configureViewState()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(addNewTracker), name: TrackersViewController.notificationName, object: nil)
+        addObservers()
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: TrackersViewController.notificationName, object: nil)
+        removeObservers()
     }
     
     // MARK: - Private Methods
@@ -143,7 +144,46 @@ final class TrackersViewController: UIViewController {
         navigationItem.searchController = searchController
     }
     
+    private func addObservers() {
+           NotificationCenter.default.addObserver(
+               self,
+               selector: #selector(addNewTracker),
+               name: TrackersViewController.addTrackerNotificationName,
+               object: nil
+           )
+
+           NotificationCenter.default.addObserver(
+               self,
+               selector: #selector(updateTracker),
+               name: TrackersViewController.updateTrackerNotificationName,
+               object: nil
+           )
+       }
+
+       private func removeObservers() {
+           NotificationCenter.default.removeObserver(
+               self,
+               name: TrackersViewController.addTrackerNotificationName,
+               object: nil
+           )
+
+           NotificationCenter.default.removeObserver(
+               self,
+               name: TrackersViewController.updateTrackerNotificationName,
+               object: nil
+           )
+       }
+    
     // MARK: - Actions
+    @objc
+       private func updateTracker(_ notification: Notification) {
+           guard let category = notification.object as? TrackerCategory,
+                 let tracker = category.trackers.first else {
+               return
+           }
+
+           trackerStore.updateTracker(tracker, with: category)
+       }
     
     @objc
     private func addNewTracker(_ notification: Notification) {
@@ -197,7 +237,7 @@ extension TrackersViewController: UICollectionViewDelegate {
             
             var menuItems: [UIAction] = []
             menuItems.append(self.createPinAction(for: indexPath, isPinned: cell.isPinned))
-            menuItems.append(self.createEditAction())
+            menuItems.append(self.createEditAction(for: indexPath))
             menuItems.append(self.createDeleteAction())
             
             return UIMenu(children: menuItems)
@@ -218,11 +258,20 @@ extension TrackersViewController: UICollectionViewDelegate {
         }
     }
     
-    private func createEditAction() -> UIAction {
+    private func createEditAction(for indexPath: IndexPath) -> UIAction {
         let title = NSLocalizedString("contextMenu.edit.title", comment: "Edit item")
-        return UIAction(title: title) { action in
-            
-        }
+        return UIAction(title: title) { [weak self] action in
+                    guard let self = self else { return }
+
+                    let viewController = NewTrackerVC(
+                        completionStatus: self.trackerStore.completionStatus(for: indexPath),
+                        categoryName: self.trackerStore.categoryName(for: indexPath)
+                    )
+
+                    let navigationController = UINavigationController(rootViewController: viewController)
+                    navigationController.modalPresentationStyle = .formSheet
+                    present(navigationController, animated: true)
+                }
     }
     
     private func createDeleteAction() -> UIAction {
