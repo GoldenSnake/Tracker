@@ -4,26 +4,13 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     
-    private let analyticsService = AnalyticsService()
-    
-    // MARK: - Public Methods
-    func setCurrentDate(to date: Date) {
-        currentDate = date.dayStart
-        datePicker.date = currentDate
-        
-        
-        if currentFilter == .today && currentDate != Date().dayStart {
-            currentFilter = .all
-        }
-        
-        trackerStore.applyFilter(currentFilter, on: currentDate)
-        collectionView.reloadData()
-        configureViewState()
-    }
-    
     static let addTrackerNotificationName = NSNotification.Name("AddNewTracker")
     static let updateTrackerNotificationName = NSNotification.Name("UpdateTracker")
+    
     // MARK: - Private Properties
+    
+    private let analyticsService = AnalyticsService()
+    private var searchQuery: String?
     
     private lazy var trackerStore: TrackerStoreProtocol = {
         TrackerStore(delegate: self, date: currentDate, filter: currentFilter)
@@ -86,13 +73,14 @@ final class TrackersViewController: UIViewController {
         configureViewState()
         
         addObservers()
+        addHideKeyboardTapGesture()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         analyticsService.report(event: "open", params: ["screen" : "main"])
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         analyticsService.report(event: "close", params: ["screen" : "main"])
@@ -100,6 +88,19 @@ final class TrackersViewController: UIViewController {
     
     deinit {
         removeObservers()
+    }
+    
+    // MARK: - Public Methods
+    
+    func setCurrentDate(to date: Date) {
+        currentDate = date.dayStart
+        datePicker.date = currentDate
+        
+        if currentFilter == .today && currentDate != Date().dayStart {
+            currentFilter = .all
+        }
+        
+        applyFilterAndUpdateView()
     }
     
     // MARK: - Private Methods
@@ -206,7 +207,9 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupSearchController() {
-        
+        searchController.hidesNavigationBarDuringPresentation = false
+                searchController.obscuresBackgroundDuringPresentation = false
+                searchController.searchResultsUpdater = self
         let searchTextField = searchController.searchBar.searchTextField
         searchTextField.clearButtonMode = .never
         searchTextField.attributedPlaceholder = NSAttributedString(
@@ -252,8 +255,24 @@ final class TrackersViewController: UIViewController {
             object: nil
         )
     }
+    private func addHideKeyboardTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    private func applyFilterAndUpdateView() {
+        trackerStore.applyFilter(currentFilter, on: currentDate, with: searchQuery)
+        collectionView.reloadData()
+        configureViewState()
+    }
     
     // MARK: - Actions
+    @objc
+    private func dismissKeyboard() {
+        searchController.searchBar.resignFirstResponder()
+    }
+    
     @objc
     private func updateTracker(_ notification: Notification) {
         guard let category = notification.object as? TrackerCategory,
@@ -288,9 +307,7 @@ final class TrackersViewController: UIViewController {
             currentFilter = .all
         }
         
-        trackerStore.applyFilter(currentFilter, on: currentDate)
-        collectionView.reloadData()
-        configureViewState()
+        applyFilterAndUpdateView()
     }
     
     @objc private func filterButtonDidTap() {
@@ -308,9 +325,7 @@ final class TrackersViewController: UIViewController {
                 
             }
             
-            self.trackerStore.applyFilter(currentFilter, on: currentDate)
-            self.collectionView.reloadData()
-            self.configureViewState()
+            self.applyFilterAndUpdateView()
         }
         
         let navigationController = UINavigationController(rootViewController: viewController)
@@ -450,6 +465,10 @@ extension TrackersViewController: UICollectionViewDelegate {
         let targetedPreview = UITargetedPreview(view: cell.cardView, parameters: parameters)
         return targetedPreview
     }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+           searchController.searchBar.resignFirstResponder()
+       }
 }
 
 
@@ -552,5 +571,17 @@ extension TrackersViewController: TrackerStoreDelegate {
             }
         }, completion: nil)
         configureViewState()
+    }
+}
+
+// MARK: - UISearchResultsUpdating
+extension TrackersViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text, !searchText.isEmpty {
+            searchQuery = searchText
+        } else {
+            searchQuery = nil
+        }
+        applyFilterAndUpdateView()
     }
 }
