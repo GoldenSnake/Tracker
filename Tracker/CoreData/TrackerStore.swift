@@ -54,6 +54,8 @@ final class TrackerStore: NSObject {
     private var updatedIndexes: [IndexPath] = []
     private var movedIndexes: [(from: IndexPath, to: IndexPath)] = []
     
+    private let statisticsService: StatisticsServiceProtocol = StatisticsService()
+    
     private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCoreData> = {
         
         let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
@@ -126,25 +128,25 @@ final class TrackerStore: NSObject {
             orPredicateWithSubpredicates: [scheduleMatchDate, completionMatchDate, isNotCompletedIrregular])
         
         guard let searchQuery else {
-                  return finalPredicate
-              }
-
-              return combinePredicateWithSearchQuery(predicate: finalPredicate,
-                                                     query: searchQuery)
+            return finalPredicate
+        }
+        
+        return combinePredicateWithSearchQuery(predicate: finalPredicate,
+                                               query: searchQuery)
     }
     
     private func completedTrackersFetchPredicate(with searchQuery: String?) -> NSPredicate {
-            let finalPredicate = NSPredicate(
+        let finalPredicate = NSPredicate(
             format: "SUBQUERY(%K, $record, $record != nil AND $record.date == %@).@count > 0",
             #keyPath(TrackerCoreData.records),
             date as NSDate)
         
         guard let searchQuery else {
-                    return finalPredicate
-                }
-
-                return combinePredicateWithSearchQuery(predicate: finalPredicate,
-                                                       query: searchQuery)
+            return finalPredicate
+        }
+        
+        return combinePredicateWithSearchQuery(predicate: finalPredicate,
+                                               query: searchQuery)
     }
     
     private func uncompletedTrackersFetchPredicate(with searchQuery: String?) -> NSPredicate {
@@ -177,22 +179,22 @@ final class TrackerStore: NSObject {
             orPredicateWithSubpredicates: [isNotCompletedRegular, isNotCompletedIrregular])
         
         guard let searchQuery else {
-                    return finalPredicate
-                }
-
-                return combinePredicateWithSearchQuery(predicate: finalPredicate,
-                                                       query: searchQuery)
-            }
-
-            func combinePredicateWithSearchQuery(predicate: NSPredicate, query: String) -> NSPredicate {
-                let namePredicate = NSPredicate(
-                    format: "%K CONTAINS[c] %@",
-                    #keyPath(TrackerCoreData.name),
-                    query
-                )
-
-                return NSCompoundPredicate(
-                    andPredicateWithSubpredicates: [predicate, namePredicate])
+            return finalPredicate
+        }
+        
+        return combinePredicateWithSearchQuery(predicate: finalPredicate,
+                                               query: searchQuery)
+    }
+    
+    func combinePredicateWithSearchQuery(predicate: NSPredicate, query: String) -> NSPredicate {
+        let namePredicate = NSPredicate(
+            format: "%K CONTAINS[c] %@",
+            #keyPath(TrackerCoreData.name),
+            query
+        )
+        
+        return NSCompoundPredicate(
+            andPredicateWithSubpredicates: [predicate, namePredicate])
     }
     
     private func fetchTrackerByID(_ id: UUID) -> TrackerCoreData? {
@@ -391,10 +393,16 @@ extension TrackerStore: TrackerStoreProtocol {
             trackerRecordCoreData.tracker = trackerCoreData
             
             CoreDataManager.shared.saveContext()
+            
+            statisticsService.onTrackerCompletion()
+            print(statisticsService.numberOfCompleted)
         } else if !isCompleted,
                   let trackerRecordCoreData = existingRecord as? TrackerRecordCoreData {
             context.delete(trackerRecordCoreData)
             CoreDataManager.shared.saveContext()
+            
+            statisticsService.onTrackerUnCompletion()
+            print(statisticsService.numberOfCompleted)
         }
     }
 }

@@ -208,8 +208,8 @@ final class TrackersViewController: UIViewController {
     
     private func setupSearchController() {
         searchController.hidesNavigationBarDuringPresentation = false
-                searchController.obscuresBackgroundDuringPresentation = false
-                searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchResultsUpdater = self
         let searchTextField = searchController.searchBar.searchTextField
         searchTextField.clearButtonMode = .never
         searchTextField.attributedPlaceholder = NSAttributedString(
@@ -467,8 +467,8 @@ extension TrackersViewController: UICollectionViewDelegate {
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-           searchController.searchBar.resignFirstResponder()
-       }
+        searchController.searchBar.resignFirstResponder()
+    }
 }
 
 

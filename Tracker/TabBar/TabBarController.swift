@@ -6,6 +6,7 @@ class TabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        delegate = self
         setupTabBar()
     }
     
@@ -15,14 +16,15 @@ class TabBarController: UITabBarController {
         trackersList.tabBarItem = UITabBarItem(title: NSLocalizedString("trackers.tabBarItem.title", comment: "Title for the Trackers tab"),
                                                image: .trackerIconNoActive,
                                                selectedImage: .trackerIconActive)
-        let navigationController = UINavigationController(rootViewController: trackersList)
+        let trackersContainer = UINavigationController(rootViewController: trackersList)
         
         let statistics = StatisticsViewController()
         statistics.tabBarItem = UITabBarItem(title: NSLocalizedString("statistics.tabBarItem.title", comment: "Title for the Statistics tab"),
                                              image: .statisticsIconNoActive,
                                              selectedImage: .statisticsIconActive)
+        let statisticsContainer = UINavigationController(rootViewController: statistics)
         
-        viewControllers = [navigationController, statistics]
+        viewControllers = [trackersContainer, statisticsContainer]
         
         setupTopBorder()
             }
@@ -50,4 +52,16 @@ class TabBarController: UITabBarController {
         
     }
     
+}
+
+// MARK: - UITabBarControllerDelegate
+
+extension TabBarController: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController,
+                          didSelect viewController: UIViewController) {
+        if let navigationController = viewController as? UINavigationController,
+           let statisticsView = navigationController.topViewController as? StatisticsViewController {
+            statisticsView.updateContent()
+        }
+    }
 }
