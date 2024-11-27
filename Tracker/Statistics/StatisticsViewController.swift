@@ -73,9 +73,7 @@ final class StatisticsViewController: UIViewController {
         } else {
             completedNumberLabel.text = String(numberOfCompleted)
             completedCaptionLabel.text = String(format: NSLocalizedString("trackers.completedCount",
-                    comment: "Number of completed trackers"))
-            
-            
+                                                                          comment: "Number of completed trackers"), numberOfCompleted)
         }
     }
     

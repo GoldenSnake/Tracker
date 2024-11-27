@@ -14,7 +14,7 @@ final class OnboardingPageViewController: UIViewController {
     
     private lazy var textLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .ypBlack
+        label.textColor = .black
         label.font = .boldSystemFont(ofSize: 32)
         label.numberOfLines = 0
         label.textAlignment = .center
@@ -24,9 +24,11 @@ final class OnboardingPageViewController: UIViewController {
     
     private lazy var skipButton: ActionButton = {
     let button = ActionButton(type: .system)
+        button.backgroundColor = .black
         button.addTarget(self, action: #selector(skipButtonDidTap), for: .touchUpInside)
         let title = NSLocalizedString("onboarding.finishButton.title", comment: "Title for the finish button")
         button.setTitle(title, for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
