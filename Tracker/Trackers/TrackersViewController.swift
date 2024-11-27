@@ -4,6 +4,8 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     
+    private let analyticsService = AnalyticsService()
+    
     // MARK: - Public Methods
     func setCurrentDate(to date: Date) {
         currentDate = date.dayStart
@@ -84,6 +86,16 @@ final class TrackersViewController: UIViewController {
         configureViewState()
         
         addObservers()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.report(event: "open", params: ["screen" : "main"])
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        analyticsService.report(event: "close", params: ["screen" : "main"])
     }
     
     deinit {
@@ -261,6 +273,7 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc private func addTrackerButtonDidTap() {
+        analyticsService.report(event: "click", params: ["screen" : "main", "item": "add_track"])
         let viewController = AddTrackerViewController()
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.modalPresentationStyle = .formSheet
@@ -281,6 +294,7 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc private func filterButtonDidTap() {
+        analyticsService.report(event: "click", params: ["screen" : "main", "item": "filter"])
         let viewController = FilterViewController()
         viewController.currentFilter = currentFilter
         viewController.onFilterSelected = { [weak self] filter in
@@ -358,6 +372,8 @@ extension TrackersViewController: UICollectionViewDelegate {
         return UIAction(title: title) { [weak self] action in
             guard let self = self else { return }
             
+            self.analyticsService.report(event: "click", params: ["screen" : "main", "item": "edit"])
+            
             let viewController = NewTrackerVC(
                 completionStatus: self.trackerStore.completionStatus(for: indexPath),
                 categoryName: self.trackerStore.categoryName(for: indexPath)
@@ -373,6 +389,8 @@ extension TrackersViewController: UICollectionViewDelegate {
         let title = NSLocalizedString("contextMenu.delete.title", comment: "Delete item")
         return UIAction(title: title, attributes: .destructive) { [weak self] action in
             guard let self = self else { return }
+            
+            self.analyticsService.report(event: "click", params: ["screen" : "main", "item": "delete"])
             
             let actionSheetController = UIAlertController(
                 title: NSLocalizedString("deleteConfirmation.title",
@@ -504,6 +522,7 @@ extension TrackersViewController: TrackerCellDelegate {
     func trackerCellDidChangeCompletion(for cell: TrackersCell, to isCompleted: Bool) {
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
         trackerStore.changeCompletion(for: indexPath, to: isCompleted)
+        analyticsService.report(event: "click", params: ["screen" : "main", "item": "track"])
     }
     
 }
