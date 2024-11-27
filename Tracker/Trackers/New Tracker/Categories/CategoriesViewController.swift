@@ -27,16 +27,23 @@ final class CategoriesViewController: UIViewController {
     
     private lazy var addCategoryButton: ActionButton = {
         let button = ActionButton()
-        button.setTitle("Добавить категорию", for: .normal)
+        let title = NSLocalizedString(
+                    "addCategoryButton.title",
+                    comment: "Title for the add category button"
+                )
+        button.setTitle(title, for: .normal)
         button.addTarget(self, action: #selector(addCategoryButtonDidTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private lazy var emptyView: UIView = {
-        let text = "Привычки и события можно \n объединить по смыслу"
+        let text = NSLocalizedString(
+            "categories.emptyView.caption",
+            comment: "Caption for the stub view explaining grouping habits and events"
+        )
         let emptyView = EmptyStateView()
-        emptyView.config(with: text)
+        emptyView.config(with: text, image: UIImage(named: "Star"))
         emptyView.translatesAutoresizingMaskIntoConstraints = false
         return emptyView
     }()
@@ -75,7 +82,7 @@ final class CategoriesViewController: UIViewController {
     }
     
     private func setupNav() {
-        title = "Категория"
+        title = NSLocalizedString("category", comment: "Title for the view with list of categories")
         navigationItem.hidesBackButton = true
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .medium),

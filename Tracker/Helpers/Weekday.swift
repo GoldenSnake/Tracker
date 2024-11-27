@@ -3,47 +3,33 @@ import Foundation
 enum Weekday: Int, CaseIterable {
     case sunday = 1, monday, tuesday, wednesday, thursday, friday, saturday
     
-    // Полное имя дня недели
-    var name: String {
-        switch self {
-        case .monday:
-            return "Понедельник"
-        case .tuesday:
-            return "Вторник"
-        case .wednesday:
-            return "Среда"
-        case .thursday:
-            return "Четверг"
-        case .friday:
-            return "Пятница"
-        case .saturday:
-            return "Суббота"
-        case .sunday:
-            return "Воскресенье"
-        }
+    private static let formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        return formatter
+    }()
+    
+    var fullName: String {
+        return Weekday.formatter.weekdaySymbols[self.rawValue - 1].capitalized
     }
     
-    // Короткое имя дня недели
     var shortName: String {
-        switch self {
-        case .monday:
-            return "Пн."
-        case .tuesday:
-            return "Вт."
-        case .wednesday:
-            return "Ср."
-        case .thursday:
-            return "Чт."
-        case .friday:
-            return "Пт."
-        case .saturday:
-            return "Сб."
-        case .sunday:
-            return "Вс."
+        return Weekday.formatter.shortWeekdaySymbols[self.rawValue - 1].capitalized
+    }
+    
+    static func orderedWeekdays() -> [Weekday] {
+        let firstWeekday = Calendar.current.firstWeekday
+        return (0..<7).compactMap { index in
+            let dayIndex = (index + firstWeekday - 1) % 7 + 1
+            if let day = Weekday(rawValue: dayIndex) {
+                return day
+            }
+            return nil
         }
     }
     
     init(date: Date) {
-        self = Weekday(rawValue: Calendar.current.component(.weekday, from: date)) ?? .monday
+        let weekdayIndex = Calendar.current.component(.weekday, from: date)
+        self = Weekday(rawValue: weekdayIndex) ?? .monday
     }
 }

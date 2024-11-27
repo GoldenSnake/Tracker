@@ -25,7 +25,7 @@ final class AddTrackerViewController: UIViewController {
     // MARK: - Private Methods
     
     private func setupNav() {
-        title = "Создание трекера"
+        title = NSLocalizedString("addTrackerView.title", comment: "Title for the tracker creation view")
         navigationItem.hidesBackButton = true
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .medium),
@@ -34,7 +34,8 @@ final class AddTrackerViewController: UIViewController {
     }
     
     private func setupRegularTrackerButton(){
-        regularTrackerButton.setTitle("Привычка", for: .normal)
+        let title = NSLocalizedString("regularTrackerButton.title", comment: "Title for the habit tracker button")
+        regularTrackerButton.setTitle(title, for: .normal)
         regularTrackerButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         regularTrackerButton.addTarget(self, action: #selector(regularTrackerButtonDidTap), for: .touchUpInside)
         
@@ -42,7 +43,8 @@ final class AddTrackerViewController: UIViewController {
     }
     
     private func setupirregularTrackerButton(){
-        irregularTrackerButton.setTitle("Нерегулярное событие", for: .normal)
+        let title = NSLocalizedString("irregularTrackerButton.title", comment: "Title for the irregular event tracker button")
+        irregularTrackerButton.setTitle(title, for: .normal)
         irregularTrackerButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         irregularTrackerButton.addTarget(self, action: #selector(irregularTrackerButtonDidTap), for: .touchUpInside)
         

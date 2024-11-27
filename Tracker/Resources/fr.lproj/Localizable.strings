@@ -1,0 +1,56 @@
+onboarding.description.one = "Suivez seulement ce que vous voulez";
+onboarding.description.two = "Même si ce n'est pas des litres d'eau et de yoga";
+onboarding.finishButton.title = "Voici la technologie!";
+
+trackers.tabBarItem.title = "Traqueur";
+
+emptyView.caption.noTrackersAtDate = "Qu'est-ce qu'on va suivre?";
+emptyView.caption.noTrackersMatchFilter = "Rien trouvé";
+emptyView.caption.statisticsIsEmpty = "Rien à analyser pour l'Instant";
+
+statistics.tabBarItem.title = "Statistique";
+
+searchController.searchBar.placeholder = "Recherche";
+
+regularTrackerButton.title = "Habitude";
+irregularTrackerButton.title = "Événement irrégulier";
+
+addTrackerView.title = "Créer un traqueur";
+newTrackerView.title.regular = "Une nouvelle habitude";
+newTrackerView.title.irregular = "Nouvel événement irrégulier";
+existingTrackerView.title.regular = "Modifier les habitudes";
+existingTrackerView.title.irregular = "Modifier un événement irrégulier";
+newCategoryView.title = "Nouvelle catégorie";
+
+cancelButton.title = "Annuler";
+createButton.title = "Créer";
+addCategoryButton.title = "Ajouter une catégorie";
+doneButton.title = "Ça y est";
+saveButton.title = "Enregistrer";
+deleteButton.title = "Supprimer";
+
+categories.emptyView.caption = "Les habitudes et les événements\n peuvent être combinés dans le sens";
+
+newTrackerView.name.placeholder = "Entrez le nom du traqueur";
+newTrackerView.emojiGroup.title = "Emoji";
+newTrackerView.colorGroup.title = "Couleur";
+
+newCategoryView.name.placeholder = "Entrez le nom de la catégorie";
+
+category = "Catégorie";
+schedule = "Horaire";
+schedule.isEveryDay = "Chaque jour";
+
+contextMenu.pin.title = "Fixer";
+contextMenu.unpin.title = "Détacher";
+contextMenu.edit.title = "Éditer";
+contextMenu.delete.title = "Supprimer";
+
+pinnedCategories.name = "Fixe";
+deleteConfirmation.title = "Vous êtes sûr de vouloir supprimer le Tracker?";
+
+filter.all = "Tous les trackers";
+filter.today = "Trackers pour aujourd'hui";
+filter.completed = "Achevé";
+filter.uncompleted = "Inachevés";
+filter.title = "Filtres";
